@@ -66,7 +66,7 @@ foreach ($raw_blogs as $i => $b) {
 
     $excerpt = txt($b['meta_desc'] ?? '', 155) ?: txt($plain, 155);
     $slug    = trim((string)($b['slug'] ?? ''));
-    $url     = $slug !== '' ? 'blog-details.php?slug=' . urlencode($slug) : 'blog-details.php?id=' . (int)$b['blog_id'];
+    $url     = $slug !== '' ? 'blog/' . urlencode($slug) : 'blog-details.php?id=' . (int)$b['blog_id'];
 
     // Topic tag auto-detection for clean filtering
     $lt = strtolower($title);

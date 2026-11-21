@@ -21,23 +21,43 @@ $brand = [
     'wa_msg'   => 'Hello Mahir Bhai (AMSB GLOBAL), I want to enquire about wholesale Red Chilli Powder and Turmeric Powder rates.'
 ];
 
+// ---- Auto Base Path (Localhost & Live Hostinger dono par automatic) ----
+$doc_root  = rtrim(str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'] ?? '')), '/');
+$proj_root = rtrim(str_replace('\\', '/', realpath(dirname(__DIR__))), '/');
+$base_path = '/';
+if ($doc_root !== '' && strpos($proj_root, $doc_root) === 0) {
+    $rel = trim(substr($proj_root, strlen($doc_root)), '/');
+    $base_path = $rel !== '' ? '/' . $rel . '/' : '/';
+}
+$https_now = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? '') == 443);
+$base_url  = ($https_now ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . $base_path;
+
 // ---- Helpers ----
+function url($path = '') {
+    global $base_path;
+    return $base_path . ltrim((string)$path, '/');
+}
+
 function q($sql) { global $conn, $ok; $r = []; if ($ok && ($res = @$conn->query($sql))) while ($x = $res->fetch_assoc()) $r[] = $x; return $r; }
 function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 function txt($s, $n = 0) { $s = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags((string)$s)))); return $n ? mb_strimwidth($s, 0, $n, '...') : $s; }
 function un($id, $w = 800) { return "https://images.unsplash.com/$id?auto=format&fit=crop&w=$w&q=80"; }
-function asset($p) { $f = dirname(__DIR__) . '/' . $p; return $p . (is_file($f) ? '?v=' . filemtime($f) : ''); }
+function asset($p) {
+    global $base_path;
+    $p = ltrim((string)$p, '/');
+    $f = dirname(__DIR__) . '/' . $p;
+    return $base_path . $p . (is_file($f) ? '?v=' . filemtime($f) : '');
+}
 function pic($src, $alt, $eager = false) { return '<img src="' . e($src) . '" alt="' . e($alt) . '"' . ($eager ? '' : ' loading="lazy"') . ' onerror="this.style.display=\'none\'">'; }
 function img($f, $d, $fb) {
-    global $site;
+    global $base_path;
     $f = trim((string)$f);
     if ($f === '') return $fb;
     if (preg_match('#^https?://#', $f)) return $f;
     $c = ltrim($f, '/'); $b = basename($c);
-    $root = dirname(__DIR__) . '/'; $base = rtrim((string)($site ?? ''), '/') . '/';
-    if ($base === '/') $base = '';
+    $root = dirname(__DIR__) . '/';
     foreach ([$c, "admin/$c", "uploads/$d/$b", "admin/uploads/$d/$b", "assets/img/uploads/$d/$b", "assets/images/$b", "admin/assets/img/uploads/$d/$b", "admin/assets/img/uploads/$b"] as $p)
-        if (is_file($root . $p)) return $base . $p;
+        if (is_file($root . $p)) return $base_path . $p;
     return $fb;
 }
 function mark($w = 42) {
@@ -87,15 +107,9 @@ $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $site_root = $scheme . $host . '/';
 
 if (!isset($canonical_url)) {
-    $req_path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
-    $req_path = preg_replace('#/index\.php$#i', '/', $req_path);$qs = '';
-    foreach (['slug', 'slug_url', 'cat', 'category'] as $k) {
-        if (!empty($_GET[$k])) {
-            $qs = '?' .$k . '=' . urlencode(trim($_GET[$k]));
-            break;
-        }
-    }
-    $canonical_url = $scheme .$host . $req_path .$qs;
+    $clean_uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    $clean_uri = preg_replace('#/index\.php$#i', '/', $clean_uri);
+    $canonical_url = ($https_now ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . $clean_uri;
 }
 
 // ---- Auto Meta & Schema Engine (Priority: 1. DB meta/page_schemas -> 2. Page Fallback -> 3. Global Default) ----
@@ -139,13 +153,15 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_o
 <html lang="en-IN">
 
 <head>
-    <meta charset="UTF-8">
+    <a class="brand" href="<?= e(url()) ?>">
+        <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($meta_title) ?></title>
     <meta name="description" content="<?= e($meta_desc) ?>">
     <meta name="keywords" content="<?= e($meta_key) ?>">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="<?= e($canonical_url) ?>">
+    <link rel="icon" href="<?= e(asset('assets/img/favicon.png')) ?>">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="en_IN">
     <meta property="og:site_name" content="<?= e($brand['name']) ?>">
@@ -171,6 +187,7 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_o
     <?php foreach (($extra_css ?? []) as $css): ?>
     <link rel="stylesheet" href="<?= e(asset($css)) ?>">
     <?php endforeach; ?>
+
 </head>
 
 <body>
@@ -202,28 +219,28 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_o
             </a>
             <button class="tg" aria-label="Menu" aria-expanded="false" aria-controls="nav"><i></i></button>
             <nav id="nav">
-                <ul>
-                    <li><a href="./" class="<?= $current_page_name === 'index.php' ? 'active' : '' ?>">Home</a></li>
-                    <li><a href="about.php" class="<?= $current_page_name === 'about.php' ? 'active' : '' ?>">About Us</a></li>
-                    <li class="has-dropdown">
-                        <a href="products.php" class="<?= in_array($current_page_name, ['products.php', 'category.php', 'product-details.php']) ? 'active' : '' ?>">Our Spices <i class="fa-solid fa-chevron-down dd-icon"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="products.php" class="all">View Complete Catalogue</a></li>
-                            <?php foreach ($nav_cats as $slug =>$cd): ?>
-                            <li class="<?= $cd['subs'] ? 'has-sub-dropdown' : '' ?>">
-                                <a href="category.php?slug=<?= e($slug) ?>"><?= e($cd['name']) ?></a>
-                            </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </li>
-                    <!-- <li><a href="service.php" class="<?= $current_page_name === 'service.php' ? 'active' : '' ?>">B2B Services</a></li> -->
-                    <li><a href="blogs.php" class="<?= in_array($current_page_name, ['blogs.php', 'blog-details.php']) ? 'active' : '' ?>">Blogs</a></li>
-                    <li><a href="contact.php" class="<?= $current_page_name === 'contact.php' ? 'active' : '' ?>">Contact</a></li>
-                </ul>
-                <div class="nav-actions">
-                    <a href="https://wa.me/<?= e($wa) ?>?text=<?= rawurlencode($brand['wa_msg']) ?>" target="_blank" rel="noopener" class="btn wa-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-                    <a href="contact.php" class="btn">Bulk Quote</a>
-                </div>
+               <ul>
+    <li><a href="<?= e(url()) ?>">Home</a></li>
+    <li><a href="<?= e(url('about/')) ?>">About Us</a></li>
+    <li class="has-dropdown">
+        <a href="<?= e(url('products/')) ?>">Our Spices <i class="fa-solid fa-chevron-down dd-icon"></i></a>
+        <ul class="dropdown-menu">
+            <li><a href="<?= e(url('products/')) ?>" class="all">View Complete Catalogue</a></li>
+            <?php foreach ($nav_cats as $slug => $cd): ?>
+            <li class="<?= $cd['subs'] ? 'has-sub-dropdown' : '' ?>">
+                <a href="<?= e(url('category/' . urlencode($slug) . '/')) ?>"><?= e($cd['name']) ?></a>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </li>
+    <!-- <li><a href="<?= e(url('#lab-specs')) ?>">Lab Specs</a></li> -->
+    <li><a href="<?= e(url('blog/')) ?>">Blogs</a></li>
+    <li><a href="<?= e(url('contact/')) ?>">Contact</a></li>
+</ul>
+<div class="nav-actions">
+    <a href="https://wa.me/<?= e($wa) ?>" target="_blank" rel="noopener" class="btn wa-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+    <a href="<?= e(url('contact/')) ?>" class="btn">Bulk Quote</a>
+</div>
             </nav>
         </div>
     </header>
