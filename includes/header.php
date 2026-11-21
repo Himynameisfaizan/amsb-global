@@ -163,6 +163,7 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_o
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= e(asset('assets/style/style.css')) ?>">
     <link rel="stylesheet" href="<?= e(asset('assets/style/about.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset('assets/style/product.css')) ?>">
     <?php foreach (($extra_css ?? []) as $css): ?>
     <link rel="stylesheet" href="<?= e(asset($css)) ?>">
     <?php endforeach; ?>
