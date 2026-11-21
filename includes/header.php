@@ -1,7 +1,7 @@
 <?php
 /** Global header: DB connect, helpers, Auto SEO + Schema + Canonical engine - AMSB GLOBAL */
 if (session_status() === PHP_SESSION_NONE) session_start();
-include 'config/connect.php';
+include_once __DIR__ . '/../config/connect.php';
 if (is_file(__DIR__ . '/../config/site.php')) {
     require_once __DIR__ . '/../config/site.php';
 }
@@ -21,52 +21,90 @@ $brand = [
     'wa_msg'   => 'Hello Mahir Bhai (AMSB GLOBAL), I want to enquire about wholesale Red Chilli Powder and Turmeric Powder rates.'
 ];
 
-// ---- Auto Base Path (Localhost & Live Hostinger dono par automatic) ----
-$doc_root  = rtrim(str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'] ?? '')), '/');
-$proj_root = rtrim(str_replace('\\', '/', realpath(dirname(__DIR__))), '/');
+// ---- Auto Base Path & Base URL (XAMPP Localhost & Live Hostinger dono par automatic) ----
+$doc_root  = rtrim(str_replace('\\', '/', (string)(realpath($_SERVER['DOCUMENT_ROOT'] ?? '') ?: ($_SERVER['DOCUMENT_ROOT'] ?? ''))), '/');
+$proj_root = rtrim(str_replace('\\', '/', (string)realpath(dirname(__DIR__))), '/');
 $base_path = '/';
-if ($doc_root !== '' && strpos($proj_root, $doc_root) === 0) {
+if ($doc_root !== '' && stripos($proj_root, $doc_root) === 0) {
     $rel = trim(substr($proj_root, strlen($doc_root)), '/');
     $base_path = $rel !== '' ? '/' . $rel . '/' : '/';
 }
-$https_now = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? '') == 443);
-$base_url  = ($https_now ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . $base_path;
+$https_now = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || (($_SERVER['SERVER_PORT'] ?? '') == 443)
+    || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+$scheme   = $https_now ? 'https://' : 'http://';
+$host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$base_url = $scheme . $host . $base_path;
 
 // ---- Helpers ----
-function url($path = '') {
-    global $base_path;
-    return $base_path . ltrim((string)$path, '/');
+if (!function_exists('url')) {
+    function url($path = '') {
+        global $base_path;
+        $path = (string)$path;
+        if ($path === '' || $path === '/') return $base_path;
+        if ($path[0] === '#') return $base_path . $path;
+        return $base_path . ltrim($path, '/');
+    }
 }
-
-function q($sql) { global $conn, $ok; $r = []; if ($ok && ($res = @$conn->query($sql))) while ($x = $res->fetch_assoc()) $r[] = $x; return $r; }
-function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
-function txt($s, $n = 0) { $s = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags((string)$s)))); return $n ? mb_strimwidth($s, 0, $n, '...') : $s; }
-function un($id, $w = 800) { return "https://images.unsplash.com/$id?auto=format&fit=crop&w=$w&q=80"; }
-function asset($p) {
-    global $base_path;
-    $p = ltrim((string)$p, '/');
-    $f = dirname(__DIR__) . '/' . $p;
-    return $base_path . $p . (is_file($f) ? '?v=' . filemtime($f) : '');
+if (!function_exists('q')) {
+    function q($sql) {
+        global $conn, $ok;
+        $r = [];
+        if ($ok && ($res = @$conn->query($sql))) {
+            while ($x = $res->fetch_assoc()) $r[] = $x;
+        }
+        return $r;
+    }
 }
-function pic($src, $alt, $eager = false) { return '<img src="' . e($src) . '" alt="' . e($alt) . '"' . ($eager ? '' : ' loading="lazy"') . ' onerror="this.style.display=\'none\'">'; }
-function img($f, $d, $fb) {
-    global $base_path;
-    $f = trim((string)$f);
-    if ($f === '') return $fb;
-    if (preg_match('#^https?://#', $f)) return $f;
-    $c = ltrim($f, '/'); $b = basename($c);
-    $root = dirname(__DIR__) . '/';
-    foreach ([$c, "admin/$c", "uploads/$d/$b", "admin/uploads/$d/$b", "assets/img/uploads/$d/$b", "assets/images/$b", "admin/assets/img/uploads/$d/$b", "admin/assets/img/uploads/$b"] as $p)
-        if (is_file($root . $p)) return $base_path . $p;
-    return $fb;
+if (!function_exists('e')) {
+    function e($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 }
-function mark($w = 42) {
-    return '<svg viewBox="0 0 52 52" width="' . $w . '" height="' . $w . '" aria-hidden="true">
-        <rect x="2" y="2" width="48" height="48" rx="12" fill="#081225" stroke="#C89B3C" stroke-width="2"/>
-        <path d="M15 36C15 23 23 14 38 13C37 27 29 36 17 37C16 37 15.5 36.5 15 36Z" fill="#C89B3C"/>
-        <path d="M20 38C25 30 31 24 39 20C37 31 30 38 20 38Z" fill="#2BB3D6"/>
-        <circle cx="35" cy="17" r="2.5" fill="#FFFFFF"/>
-    </svg>';
+if (!function_exists('txt')) {
+    function txt($s, $n = 0) {
+        $s = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags((string)$s))));
+        return $n ? mb_strimwidth($s, 0, $n, '...') : $s;
+    }
+}
+if (!function_exists('un')) {
+    function un($id, $w = 800) { return "https://images.unsplash.com/$id?auto=format&fit=crop&w=$w&q=80"; }
+}
+if (!function_exists('asset')) {
+    function asset($p) {
+        global $base_path;
+        $p = ltrim((string)$p, '/');
+        $f = dirname(__DIR__) . '/' . $p;
+        return $base_path . $p . (is_file($f) ? '?v=' . filemtime($f) : '');
+    }
+}
+if (!function_exists('pic')) {
+    function pic($src, $alt, $eager = false) {
+        return '<img src="' . e($src) . '" alt="' . e($alt) . '"' . ($eager ? '' : ' loading="lazy"') . ' onerror="this.style.display=\'none\'">';
+    }
+}
+if (!function_exists('img')) {
+    function img($f, $d, $fb) {
+        global $base_path;
+        $f = trim((string)$f);
+        if ($f === '') return $fb;
+        if (preg_match('#^https?://#', $f)) return $f;
+        $c = ltrim($f, '/');
+        $b = basename($c);
+        $root = dirname(__DIR__) . '/';
+        foreach ([$c, "admin/$c", "uploads/$d/$b", "admin/uploads/$d/$b", "assets/img/uploads/$d/$b", "assets/images/$b", "admin/assets/img/uploads/$d/$b", "admin/assets/img/uploads/$b"] as $p) {
+            if (is_file($root . $p)) return $base_path . $p;
+        }
+        return $fb;
+    }
+}
+if (!function_exists('mark')) {
+    function mark($w = 42) {
+        return '<svg viewBox="0 0 52 52" width="' . $w . '" height="' . $w . '" aria-hidden="true">
+            <rect x="2" y="2" width="48" height="48" rx="12" fill="#081225" stroke="#C89B3C" stroke-width="2"/>
+            <path d="M15 36C15 23 23 14 38 13C37 27 29 36 17 37C16 37 15.5 36.5 15 36Z" fill="#C89B3C"/>
+            <path d="M20 38C25 30 31 24 39 20C37 31 30 38 20 38Z" fill="#2BB3D6"/>
+            <circle cx="35" cy="17" r="2.5" fill="#FFFFFF"/>
+        </svg>';
+    }
 }
 
 // ---- Contact settings ----
@@ -101,61 +139,64 @@ foreach (q("SELECT cate_id, categories AS category_name, slug_url AS slug FROM c
 }
 
 // ---- Clean Canonical URL Engine (Auto for Every Page) ----
-$https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? '') == 443) || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
-$scheme = $https ? 'https://' : 'http://';
-$host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
-$site_root = $scheme . $host . '/';
-
 if (!isset($canonical_url)) {
     $clean_uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
     $clean_uri = preg_replace('#/index\.php$#i', '/', $clean_uri);
-    $canonical_url = ($https_now ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . $clean_uri;
+    $canonical_url = $scheme . $host . $clean_uri;
 }
 
-// ---- Auto Meta & Schema Engine (Priority: 1. DB meta/page_schemas -> 2. Page Fallback -> 3. Global Default) ----
+// ---- Auto Meta & Schema Engine (Priority: 1. Dynamic Page Vars -> 2. DB meta/page_schemas -> 3. Page $page_meta -> 4. Global Default) ----
 $current_page_name = basename($_SERVER['PHP_SELF']);
-$db_meta = [];$db_schema = '';
+$db_meta   = [];
+$db_schema = '';
 
 if ($ok) {
-    $pg =$conn->real_escape_string($current_page_name);$db_meta   = q("SELECT meta_title, meta_desc, meta_key FROM meta WHERE page_url='$pg' LIMIT 1")[0] ?? [];
+    $pg        = $conn->real_escape_string($current_page_name);
+    $db_meta   = q("SELECT meta_title, meta_desc, meta_key FROM meta WHERE page_url='$pg' LIMIT 1")[0] ?? [];
     $db_schema = q("SELECT schema_markup FROM page_schemas WHERE page_url='$pg' LIMIT 1")[0]['schema_markup'] ?? '';
 }
 
 $default_title = 'AMSB GLOBAL | Bulk Red Chilli Powder & Turmeric Powder Wholesale Supplier in Morbi, Gujarat';
-$default_desc  = 'AMSB GLOBAL (Wankaner, Morbi, Gujarat) is a trusted B2B wholesale supplier and trader of pure Red Chilli Powder and Turmeric Powder across India.';$default_key   = 'Red Chilli Powder Wholesale Gujarat, Turmeric Powder Bulk Supplier Morbi, AMSB Global Wankaner, Indian Spices B2B Trade';
+$default_desc  = 'AMSB GLOBAL (Wankaner, Morbi, Gujarat) is a trusted B2B wholesale supplier and trader of pure Red Chilli Powder and Turmeric Powder across India.';
+$default_key   = 'Red Chilli Powder Wholesale Gujarat, Turmeric Powder Bulk Supplier Morbi, AMSB Global Wankaner, Indian Spices B2B Trade';
 
-$meta_title = !empty($meta_title) ? $meta_title : (($db_meta['meta_title'] ?? '') ?: ($page_meta_title ?? $default_title));
-$meta_desc  = !empty($meta_desc)  ? $meta_desc  : (($db_meta['meta_desc'] ?? '')  ?: ($page_meta_desc ?? $default_desc));
-$meta_key   = !empty($meta_key)   ? $meta_key   : (($db_meta['meta_key'] ?? '')   ?: ($page_meta_key ?? $default_key));
+$fb_title  = $page_meta['title']  ?? ($page_meta_title ?? $default_title);
+$fb_desc   = $page_meta['desc']   ?? ($page_meta_desc  ?? $default_desc);
+$fb_key    = $page_meta['key']    ?? ($page_meta_key   ?? $default_key);
+$fb_schema = $page_meta['schema'] ?? ($page_schema     ?? '');
+
+$meta_title = !empty($meta_title) ? $meta_title : (($db_meta['meta_title'] ?? '') ?: $fb_title);
+$meta_desc  = !empty($meta_desc)  ? $meta_desc  : (($db_meta['meta_desc'] ?? '')  ?: $fb_desc);
+$meta_key   = !empty($meta_key)   ? $meta_key   : (($db_meta['meta_key'] ?? '')   ?: $fb_key);
 
 // Global Organization JSON-LD fallback if neither DB nor page provides schema
 $default_org_schema = '<script type="application/ld+json">' . json_encode([
-    '@context' => 'https://schema.org',
-    '@type' => 'WholesaleStore',
-    'name' => $brand['name'],
-    'url' => $site_root,
+    '@context'  => 'https://schema.org',
+    '@type'     => 'WholesaleStore',
+    'name'      => $brand['name'],
+    'url'       => $base_url,
     'telephone' => '+' . $tel,
-    'email' => $mail,
-    'founder' => ['@type' => 'Person', 'name' => $brand['founder']],
-    'address' => [
-        '@type' => 'PostalAddress',
-        'streetAddress' => 'Wankaner',
+    'email'     => $mail,
+    'founder'   => ['@type' => 'Person', 'name' => $brand['founder']],
+    'address'   => [
+        '@type'           => 'PostalAddress',
+        'streetAddress'   => 'Wankaner',
         'addressLocality' => 'Morbi',
-        'addressRegion' => 'Gujarat',
-        'postalCode' => '363621',
-        'addressCountry' => 'IN'
+        'addressRegion'   => 'Gujarat',
+        'postalCode'      => '363621',
+        'addressCountry'  => 'IN'
     ]
 ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . '</script>';
 
-$schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_org_schema));
+$schema = !empty($schema) ? $schema : ($db_schema ?: ($fb_schema ?: $default_org_schema));
 ?>
 <!DOCTYPE html>
 <html lang="en-IN">
 
 <head>
-    <a class="brand" href="<?= e(url()) ?>">
-        <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="<?= e($base_url) ?>">
     <title><?= e($meta_title) ?></title>
     <meta name="description" content="<?= e($meta_desc) ?>">
     <meta name="keywords" content="<?= e($meta_key) ?>">
@@ -172,7 +213,6 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_o
     <meta name="twitter:title" content="<?= e($meta_title) ?>">
     <meta name="twitter:description" content="<?= e($meta_desc) ?>">
     <?php if (!empty($schema)) echo "\n    " . $schema . "\n"; ?>
-    <link rel="icon" href="assets/img/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -187,7 +227,6 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_o
     <?php foreach (($extra_css ?? []) as $css): ?>
     <link rel="stylesheet" href="<?= e(asset($css)) ?>">
     <?php endforeach; ?>
-
 </head>
 
 <body>
@@ -208,7 +247,7 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_o
 
     <header class="site-header" id="top">
         <div class="wrap nav-wrap">
-            <a class="brand" href="./">
+            <a class="brand" href="<?= e(url()) ?>">
                 <?= $logo ? '<img src="' . e($logo) . '" alt="' . e($brand['name']) . '">' : mark(42) ?>
                 <?php if (!$logo): ?>
                 <span>
@@ -219,28 +258,27 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_o
             </a>
             <button class="tg" aria-label="Menu" aria-expanded="false" aria-controls="nav"><i></i></button>
             <nav id="nav">
-               <ul>
-    <li><a href="<?= e(url()) ?>">Home</a></li>
-    <li><a href="<?= e(url('about/')) ?>">About Us</a></li>
-    <li class="has-dropdown">
-        <a href="<?= e(url('products/')) ?>">Our Spices <i class="fa-solid fa-chevron-down dd-icon"></i></a>
-        <ul class="dropdown-menu">
-            <li><a href="<?= e(url('products/')) ?>" class="all">View Complete Catalogue</a></li>
-            <?php foreach ($nav_cats as $slug => $cd): ?>
-            <li class="<?= $cd['subs'] ? 'has-sub-dropdown' : '' ?>">
-                <a href="<?= e(url('category/' . urlencode($slug) . '/')) ?>"><?= e($cd['name']) ?></a>
-            </li>
-            <?php endforeach; ?>
-        </ul>
-    </li>
-    <!-- <li><a href="<?= e(url('#lab-specs')) ?>">Lab Specs</a></li> -->
-    <li><a href="<?= e(url('blog/')) ?>">Blogs</a></li>
-    <li><a href="<?= e(url('contact/')) ?>">Contact</a></li>
-</ul>
-<div class="nav-actions">
-    <a href="https://wa.me/<?= e($wa) ?>" target="_blank" rel="noopener" class="btn wa-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-    <a href="<?= e(url('contact/')) ?>" class="btn">Bulk Quote</a>
-</div>
+                <ul>
+                    <li><a href="<?= e(url()) ?>">Home</a></li>
+                    <li><a href="<?= e(url('about/')) ?>">About Us</a></li>
+                    <li class="has-dropdown">
+                        <a href="<?= e(url('products/')) ?>">Our Spices <i class="fa-solid fa-chevron-down dd-icon"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="<?= e(url('products/')) ?>" class="all">View Complete Catalogue</a></li>
+                            <?php foreach ($nav_cats as $slug => $cd): ?>
+                            <li class="<?= $cd['subs'] ? 'has-sub-dropdown' : '' ?>">
+                                <a href="<?= e(url('category/' . urlencode($slug) . '/')) ?>"><?= e($cd['name']) ?></a>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </li>
+                    <li><a href="<?= e(url('blog/')) ?>">Blogs</a></li>
+                    <li><a href="<?= e(url('contact/')) ?>">Contact</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <a href="https://wa.me/<?= e($wa) ?>?text=<?= rawurlencode($brand['wa_msg']) ?>" target="_blank" rel="noopener" class="btn wa-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+                    <a href="<?= e(url('contact/')) ?>" class="btn">Bulk Quote</a>
+                </div>
             </nav>
         </div>
     </header>

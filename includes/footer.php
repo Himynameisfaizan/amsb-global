@@ -66,6 +66,27 @@
 </a>
 
 <script src="<?= e(asset('assets/js/main.js')) ?>"></script>
+<script>
+document.addEventListener('click', function (ev) {
+    const a = ev.target.closest('a[href*="#"]');
+    if (!a) return;
+    const raw = a.getAttribute('href') || '';
+    const isHashOnly = raw.startsWith('#');
+    const samePage = isHashOnly || (a.origin === window.location.origin && a.pathname === window.location.pathname && a.search === window.location.search);
+    if (!samePage) return;
+
+    const hash = isHashOnly ? raw : a.hash;
+    if (hash && hash.length > 1) {
+        const target = document.querySelector(hash);
+        if (target) {
+            ev.preventDefault();
+            const y = target.getBoundingClientRect().top + window.scrollY - 95;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+            history.replaceState(null, '', window.location.pathname + window.location.search + hash);
+        }
+    }
+});
+</script>
 </body>
 
 </html>

@@ -56,7 +56,7 @@ if ($product) {
     $p_cslug = trim((string)($product['cat_slug'] ?? ''));
 
     $canonical_url = $p_slug !== ''
-        ? $base_p . 'product-details.php?slug=' . urlencode($p_slug)
+        ? $base_p . 'product/' . urlencode($p_slug)
         : $base_p . 'product-details.php?id=' . (int)$product['id'];
 
     $meta_title = !empty($product['meta_title'])
@@ -101,7 +101,7 @@ if ($product) {
                     '@id' => $canonical_url . '#breadcrumb',
                     'itemListElement' => [
                         ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => $base_p],
-                        ['@type' => 'ListItem', 'position' => 2, 'name' => $p_cat, 'item' => $p_cslug ? $base_p . 'category.php?slug=' . urlencode($p_cslug) : $base_p . 'products.php'],
+                        ['@type' => 'ListItem', 'position' => 2, 'name' => $p_cat, 'item' => $p_cslug ? $base_p . 'category/' . urlencode($p_cslug) : $base_p . 'products.php'],
                         ['@type' => 'ListItem', 'position' => 3, 'name' => $p_name, 'item' => $canonical_url]
                     ]
                 ]
@@ -234,7 +234,7 @@ include_once 'includes/header.php';
             <nav class="bc" aria-label="Breadcrumb">
                 <a href="./"><i class="fa-solid fa-house"></i> Home</a>
                 <span>/</span>
-                <a href="<?= $p_cslug ? 'category.php?slug=' . urlencode($p_cslug) : 'products.php' ?>"><?= e($p_cat) ?></a>
+                <a href="<?= $p_cslug ? 'category/' . urlencode($p_cslug) : 'products.php' ?>"><?= e($p_cat) ?></a>
                 <span>/</span>
                 <span class="curr"><?= e($p_name) ?></span>
             </nav>
@@ -455,7 +455,7 @@ include_once 'includes/header.php';
                     <span class="hi">More Wholesale Options</span>
                     <h2>Related Bulk Spices You May Need</h2>
                 </div>
-                <a href="<?= $p_cslug ? 'category.php?slug=' . urlencode($p_cslug) : 'products.php' ?>" class="btn o d">View All <?= e($p_cat) ?></a>
+                <a href="<?= $p_cslug ? 'category/' . urlencode($p_cslug) : 'products.php' ?>" class="btn o d">View All <?= e($p_cat) ?></a>
             </div>
 
             <div class="cat-prod-grid">
@@ -464,7 +464,7 @@ include_once 'includes/header.php';
                     if ($rname === '') continue;
                     $rfile = preg_split('/[,|;"]+/', trim(stripslashes((string)($rp['pro_img'] ?? '')), '[]" '))[0] ?? '';
                     $rimg  = img($rfile, 'products', un($is_turmeric ? 'photo-1615485500704-8e990f9900f7' : 'photo-1588252303782-cb80119abd6d', 700));
-                    $rurl  = !empty($rp['slug_url']) ? 'product-details.php?slug=' . urlencode($rp['slug_url']) : 'product-details.php?id=' . (int)$rp['id'];
+                    $rurl  = !empty($rp['slug_url']) ? 'product/' . urlencode($rp['slug_url']) : 'product-details.php?id=' . (int)$rp['id'];
                 ?>
                 <article class="cp-card" data-reveal>
                     <a class="cp-img" href="<?= e($rurl) ?>">

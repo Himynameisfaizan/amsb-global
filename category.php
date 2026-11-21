@@ -218,7 +218,7 @@ $cat_banner_img = img($current_cat['image'] ?? '', 'categories', un($is_turmeric
             <div class="cat-prod-grid" id="catProdGrid">
                 <?php foreach ($products as $p):
                     $detail_url = $p['slug']
-                        ? 'product-details.php?slug=' . urlencode($p['slug'])
+                        ? 'product/' . urlencode($p['slug'])
                         : 'product-details.php?id=' . $p['id'];
                 ?>
                 <article class="cp-card" data-name="<?= e(strtolower($p['name'])) ?>" data-reveal>

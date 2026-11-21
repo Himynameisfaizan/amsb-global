@@ -36,7 +36,7 @@ if ($blog) {
     $b_disp_d = !empty($blog['created_at']) ? date('d M Y', strtotime($blog['created_at'])) : date('d M Y');
 
     $canonical_url = $b_slug !== ''
-        ? $base_bd . 'blog-details.php?slug=' . urlencode($b_slug)
+        ? $base_bd . 'blog/' . urlencode($b_slug)
         : $base_bd . 'blog-details.php?id=' . $b_id;
 
     $meta_title = !empty($blog['meta_title'])
@@ -230,7 +230,7 @@ body {
                 <?php if ($prev_post || $next_post): ?>
                 <nav class="bd-prev-next" aria-label="Article navigation" data-reveal>
                     <?php if ($prev_post):
-                        $pu = !empty($prev_post['slug']) ? 'blog-details.php?slug=' . urlencode($prev_post['slug']) : 'blog-details.php?id=' . (int)$prev_post['blog_id'];
+                        $pu = !empty($prev_post['slug']) ? 'blog/' . urlencode($prev_post['slug']) : 'blog-details.php?id=' . (int)$prev_post['blog_id'];
                     ?>
                     <a class="pn-card pn-prev" href="<?= e($pu) ?>">
                         <small><i class="fa-solid fa-arrow-left"></i> Previous Guide</small>
@@ -241,7 +241,7 @@ body {
                     <?php endif; ?>
 
                     <?php if ($next_post):
-                        $nu = !empty($next_post['slug']) ? 'blog-details.php?slug=' . urlencode($next_post['slug']) : 'blog-details.php?id=' . (int)$next_post['blog_id'];
+                        $nu = !empty($next_post['slug']) ? 'blog/' . urlencode($next_post['slug']) : 'blog-details.php?id=' . (int)$next_post['blog_id'];
                     ?>
                     <a class="pn-card pn-next" href="<?= e($nu) ?>">
                         <small>Next Guide <i class="fa-solid fa-arrow-right"></i></small>
@@ -288,7 +288,7 @@ body {
                     <h4><i class="fa-regular fa-newspaper"></i> Recent Trade Guides</h4>
                     <div class="sb-recent-list">
                         <?php foreach ($recent_posts as $rp):
-                            $rpu = !empty($rp['slug']) ? 'blog-details.php?slug=' . urlencode($rp['slug']) : 'blog-details.php?id=' . (int)$rp['blog_id'];
+                            $rpu = !empty($rp['slug']) ? 'blog/' . urlencode($rp['slug']) : 'blog-details.php?id=' . (int)$rp['blog_id'];
                             $rpi = img($rp['image'] ?? '', 'blogs', un('photo-1596040033229-a9821ebd058d', 300));
                         ?>
                         <a class="sb-rec-item" href="<?= e($rpu) ?>">
@@ -310,7 +310,7 @@ body {
                     <ul class="sb-cat-list">
                         <?php foreach ($nav_cats as $cslug => $cd): ?>
                         <li>
-                            <a href="category.php?slug=<?= urlencode($cslug) ?>">
+                            <a href="category/<?= urlencode($cslug) ?>">
                                 <span><?= e($cd['name']) ?></span>
                                 <i class="fa-solid fa-chevron-right"></i>
                             </a>
@@ -337,7 +337,7 @@ body {
             </div>
             <div class="blog-grid">
                 <?php foreach (array_slice($recent_posts, 0, 3) as $rb):
-                    $rbu = !empty($rb['slug']) ? 'blog-details.php?slug=' . urlencode($rb['slug']) : 'blog-details.php?id=' . (int)$rb['blog_id'];
+                    $rbu = !empty($rb['slug']) ? 'blog/' . urlencode($rb['slug']) : 'blog-details.php?id=' . (int)$rb['blog_id'];
                     $rbi = img($rb['image'] ?? '', 'blogs', un('photo-1588252303782-cb80119abd6d', 700));
                     $rbx = txt($rb['meta_desc'] ?? '', 130) ?: txt($rb['description'] ?? '', 130);
                 ?>

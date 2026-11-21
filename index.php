@@ -279,7 +279,7 @@ $Bl = q("SELECT title, slug, author, image, meta_desc, description, created_at F
             </div>
             <div class="cat-grid">
                 <?php foreach ($cats as $i => $c): ?>
-                <a class="cat" href="category.php?slug=<?= e($c[1]) ?>" style="--c:<?= $CC[$i % 6] ?>">
+                <a class="cat" href="category/<?= e($c[1]) ?>" style="--c:<?= $CC[$i % 6] ?>">
                     <div class="ph"><?= pic($c[3], $c[0]) ?></div>
                     <div class="bd">
                         <span class="cat-tag">Bulk Supply</span>
@@ -309,7 +309,7 @@ $Bl = q("SELECT title, slug, author, image, meta_desc, description, created_at F
                 <?php endforeach; ?>
             </div>
             <div class="pg-grid">
-                <?php foreach ($P as $p): $u = $p['slug'] ? 'product-details.php?slug=' . urlencode($p['slug']) : 'products.php'; ?>
+                <?php foreach ($P as $p): $u = $p['slug'] ? 'product/' . urlencode($p['slug']) : 'products'; ?>
                 <article class="pc" data-c="<?= e($p['cs']) ?>">
                     <a class="ph" href="<?= e($u) ?>">
                         <?= pic($p['img'], $p['n']) ?>
@@ -373,7 +373,7 @@ $Bl = q("SELECT title, slug, author, image, meta_desc, description, created_at F
                     </li>
                 </ul>
                 <div class="ab-actions">
-                    <a href="about.php" class="btn d">Read Company Profile</a>
+                    <a href="about" class="btn d">Read Company Profile</a>
                     <a href="tel:+<?= e($tel) ?>" class="btn o d"><i class="fa-solid fa-phone"></i> Call
                         <?= e($brand['founder']) ?></a>
                 </div>
@@ -521,7 +521,7 @@ $Bl = q("SELECT title, slug, author, image, meta_desc, description, created_at F
                 <?php foreach ($Bl as $b):
                 $bi = img($b['image'], 'blogs', un('photo-1596040033229-a9821ebd058d', 700));
                 $ex = txt($b['meta_desc'], 125) ?: txt($b['description'], 125);
-                $u = 'blog-details.php?slug=' . urlencode($b['slug']); ?>
+                $u = 'blog/' . urlencode($b['slug']); ?>
                 <article class="bl">
                     <a class="im" href="<?= e($u) ?>"><?= pic($bi, $b['title']) ?></a>
                     <div class="bl-body">

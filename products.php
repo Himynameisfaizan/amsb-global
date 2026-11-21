@@ -177,7 +177,7 @@ foreach ($rows as $i => $r) {
             <div class="cat-prod-grid" id="allProdGrid">
                 <?php foreach ($products as $p):
                     $detail_url = $p['slug']
-                        ? 'product-details.php?slug=' . urlencode($p['slug'])
+                        ? 'product/' . urlencode($p['slug'])
                         : 'product-details.php?id=' . $p['id'];
                 ?>
                 <article class="cp-card"
