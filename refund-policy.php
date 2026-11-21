@@ -1,100 +1,189 @@
 <?php
-include('config/connect.php');
+if (session_status() === PHP_SESSION_NONE) session_start();
+include_once 'config/connect.php';
 
-$pageTitle = "Refund and Cancellation Policy | Bhagirath Enterprises";
-$meta_description = "Read the refund and cancellation policy of Bhagirath Enterprises for premium spices, dry fruits, seeds, and kernels orders[cite: 23].";
-$meta_key = "refund policy, cancellation policy, bhagirath enterprises, spices export";
+$https_pl = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? '') == 443);
+$base_pl  = ($https_pl ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/';
+$curr_pl  = $base_pl . basename($_SERVER['PHP_SELF']);
 
-include 'includes/header.php';
-include 'includes/breadcrumb.php';
+$page_meta = [
+    'title' => 'Refund & Cancellation Policy | AMSB GLOBAL — Wholesale Spice Trade',
+    'desc'  => 'Read the Refund and Cancellation Policy of AMSB GLOBAL (Wankaner, Morbi, Gujarat) for bulk wholesale orders of Red Chilli Powder and Turmeric Powder.',
+    'key'   => 'AMSB Global refund policy, cancellation policy bulk spices, wholesale spice trade terms Morbi',
+    'schema' => '<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "' . $curr_pl . '#webpage",
+      "url": "' . $curr_pl . '",
+      "name": "Refund and Cancellation Policy - AMSB GLOBAL",
+      "description": "Refund, replacement, and cancellation terms for B2B wholesale spice orders placed with AMSB GLOBAL.",
+      "inLanguage": "en-IN",
+      "isPartOf": { "@id": "' . $base_pl . '#website" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "' . $curr_pl . '#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "' . $base_pl . '" },
+        { "@type": "ListItem", "position": 2, "name": "Refund & Cancellation Policy", "item": "' . $curr_pl . '" }
+      ]
+    }
+  ]
+}
+</script>'
+];
+
+include_once 'includes/header.php';
 ?>
 
-<section class="py-5" style="background-color: #f8f9fa;">
-    <div class="container">
-        <div class="row g-5">
-            
-            <!-- LEFT COLUMN: Content -->
-            <div class="col-lg-8">
-                <div class="bg-white p-4 p-md-5 rounded shadow-sm border">
-                    <h1 class="mb-4" style="color: #2b5e2c; font-weight: 700;">Refund and Cancellation Policy</h1>
-                    <p class="text-muted mb-5"><strong>Last Updated:</strong> <?= date('F d, Y'); ?></p>
+<main id="main" class="policy-page">
 
-                    <p>At <strong>Bhagirath Enterprises</strong>, we ensure the highest quality of our agricultural commodities, including premium spices, dry fruits, seeds, and kernels[cite: 23]. Because we deal in consumable food products, our refund and cancellation policies are structured to comply with strict food safety, hygiene, and trade standards[cite: 23].</p>
-
-                    <h3 class="mt-5 mb-3" style="color: #e65c00; font-size: 1.3rem;">Cancellation Policy</h3>
-                    
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">1. Order Cancellation Before Dispatch</h4>
-                    <p>You may cancel your order within <strong>24 hours</strong> of placing it, provided it has not yet been processed, packed, or dispatched from our facility[cite: 23]. A full refund will be processed immediately upon valid request sent to our official support email[cite: 23].</p>
-
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">2. Cancellation After Dispatch</h4>
-                    <p>Due to the perishable and consumable nature of spices and dry fruits, orders <strong>cannot be cancelled</strong> once they have been handed over to our logistics partners or shipped[cite: 23].</p>
-                    
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">3. Bulk & Wholesale Orders</h4>
-                    <p>For custom-packaged or bulk container export orders of seeds and kernels, cancellations are not permitted once sourcing and processing have commenced[cite: 23]. Advance payments for bulk wholesale orders remain strictly non-refundable[cite: 23].</p>
-
-                    <hr class="my-5">
-
-                    <h3 class="mb-3" style="color: #e65c00; font-size: 1.3rem;">Return and Refund Policy</h3>
-                    
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">1. Eligibility for Returns & Refunds</h4>
-                    <p>We <strong>do not accept general returns</strong> (such as change of mind) due to strict food safety and hygiene regulations[cite: 23]. However, replacements or refunds are applicable if[cite: 23]:</p>
-                    <ul>
-                        <li>The product packaging was severely damaged or compromised during transit[cite: 23].</li>
-                        <li>An incorrect product or quantity was delivered[cite: 23].</li>
-                    </ul>
-                    <p><em>Note: You must notify us within <strong>48 hours of delivery</strong> with unboxing video or photographic proof[cite: 23].</em></p>
-
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">2. Refund Timeline</h4>
-                    <p>Approved refunds are credited back to the original payment method within <strong>5 to 7 business days</strong>[cite: 23].</p>
-                </div>
+    <!-- 1. SOFT LIGHT BLUE POLICY HERO -->
+    <section class="bd-hero">
+        <div class="wrap bd-hero-inner">
+            <nav class="bc" aria-label="Breadcrumb">
+                <a href="./"><i class="fa-solid fa-house"></i> Home</a>
+                <span>/</span>
+                <span class="curr">Refund &amp; Cancellation Policy</span>
+            </nav>
+            <div class="hero-badges">
+                <span class="pill-primary"><i class="fa-solid fa-rotate-left"></i> Fair B2B Trade Terms</span>
+                <span class="pill-secondary"><i class="fa-regular fa-calendar"></i> Last Updated: <?= date('d M Y') ?></span>
             </div>
+            <h1>Refund &amp; <span class="txt-primary">Cancellation Policy</span></h1>
+            <p class="lead">Clear, transparent rules governing order cancellations, sample verification, transit damage claims, and refunds for wholesale spice orders at <strong>AMSB GLOBAL</strong>.</p>
+        </div>
+    </section>
 
-            <!-- RIGHT COLUMN: Sidebar Widgets -->
-            <div class="col-lg-4">
-                <div class="sidebar-widgets position-sticky" style="top: 20px;">
-                    <div class="widget-box bg-white p-4 rounded shadow-sm border mb-4">
-                        <h5 class="fw-bold mb-3 border-bottom pb-2">Search Products</h5>
-                        <form action="products.php" method="GET" class="d-flex">
-                            <input type="text" name="search" class="form-control me-2" placeholder="Search..." required style="font-size: 0.9rem;">
-                            <button type="submit" class="btn text-white px-3" style="background: var(--primary-green, #2b5e2c);"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        </form>
-                    </div>
+    <!-- 2. POLICY CONTENT + STICKY SIDEBAR -->
+    <section class="sec bd-body-sec">
+        <div class="wrap bd-grid">
 
-                    <div class="widget-box bg-white p-4 rounded shadow-sm border mb-4">
-                        <h5 class="fw-bold mb-3 border-bottom pb-2">Categories</h5>
-                        <ul class="list-unstyled mb-0 category-list">
-                            <?php
-                            $catQuery = mysqli_query($conn, "SELECT * FROM categories WHERE status = 1");
-                            if ($catQuery && mysqli_num_rows($catQuery) > 0) {
-                                while($catRow = mysqli_fetch_assoc($catQuery)) {
-                            ?>
-                            <li class="mb-2 pb-2 border-bottom">
-                                <a href="category.php?slug=<?= htmlspecialchars($catRow['slug_url']) ?>" class="text-decoration-none d-flex justify-content-between align-items-center text-muted" style="font-size: 0.95rem;">
-                                    <span><i class="fa-solid fa-angle-right me-2" style="font-size: 0.75rem;"></i> <?= htmlspecialchars($catRow['categories']) ?></span>
-                                </a>
-                            </li>
-                            <?php 
-                                }
-                            }
-                            ?>
+            <!-- Left Column: Policy Content -->
+            <article class="bd-main">
+                <div class="bd-content-card policy-card">
+                    <div class="dyn-richtext bd-prose">
+                        <p>At <strong>AMSB GLOBAL</strong> (Wankaner, Morbi, Gujarat), we supply 100% pure, unadulterated <strong>Red Chilli Powder</strong> and <strong>Turmeric Powder</strong> in bulk commercial quantities. Because ground spices are consumable food commodities subject to strict food safety and hygiene standards, our cancellation and refund terms are designed to be fair and transparent for every wholesale buyer.</p>
+
+                        <div class="policy-callout">
+                            <strong><i class="fa-solid fa-vial-circle-check"></i> Sample-First Assurance:</strong> We strongly recommend reviewing our physical courier sample before confirming a bulk purchase order so you are 100% confident about colour, pungency, curcumin level, and mesh fineness upfront.
+                        </div>
+
+                        <h2>Part A — Order Cancellation Policy</h2>
+
+                        <h3>1. Cancellation Before Grinding or Packing</h3>
+                        <p>Wholesale orders may be cancelled within <strong>24 hours</strong> of order confirmation, provided fresh grinding, custom blending, or bag packing has not yet started at our Wankaner facility. Valid cancellation requests must be confirmed in writing via email (<strong><?= e($mail) ?></strong>) or official WhatsApp.</p>
+
+                        <h3>2. Cancellation After Processing or Dispatch</h3>
+                        <p>Once bulk spice lots are freshly ground to your specified mesh/grade, packed in bags, billed with GST/E-Way bill, or handed over to the road transport carrier, orders <strong>cannot be cancelled</strong>.</p>
+
+                        <h3>3. Custom Blends &amp; Private-Label Orders</h3>
+                        <p>For custom-blended lots, custom mesh grinding, or private-label / buyer-branded packaging orders, cancellations are not permitted once raw material procurement or custom grinding has commenced. Any advance deposit paid against custom-processed bulk orders is adjusted against actual procurement/processing costs.</p>
+
+                        <h2>Part B — Return, Replacement &amp; Refund Policy</h2>
+
+                        <h3>1. Non-Returnable Food Commodities</h3>
+                        <p>In line with FSSAI food hygiene standards, we <strong>do not accept general returns</strong> on opened or delivered ground spices due to change of mind or local mandi price fluctuations after booking.</p>
+
+                        <h3>2. Eligible Claims (Shortage, Wrong Grade, or Severe Transit Damage)</h3>
+                        <p>We stand firmly behind every lot we dispatch. Replacement, credit note, or refund adjustments are applicable in the following verified cases:</p>
+                        <ul>
+                            <li>The delivered product grade or bag weight differs materially from the confirmed Purchase Order and approved sample.</li>
+                            <li>Bags arrive severely torn, water-damaged, or compromised due to faulty packing prior to loading.</li>
+                            <li>A verified quantity shortage occurs compared to the GST Tax Invoice and Transport LR slip.</li>
                         </ul>
-                    </div>
 
-                    <div class="widget-box rounded shadow-sm text-center p-4 text-white" style="background: linear-gradient(135deg, var(--primary-green, #2b5e2c) 0%, #1a3f1b 100%);">
-                        <div class="icon-wrap mb-3"><i class="fa-solid fa-headset fs-1 text-white opacity-75"></i></div>
-                        <h4 class="fw-bold mb-2 text-white">Need Help?</h4>
-                        <p class="small mb-4 opacity-75">Contact our support team for any order assistance.</p>
-                        <a href="contact.php" class="btn bg-white w-100 fw-bold shadow-sm mb-3" style="color: var(--primary-green, #2b5e2c);">Contact Us</a>
-                        <a href="tel:+918448211202" class="text-white text-decoration-none small fw-bold"><i class="fa-solid fa-phone me-1"></i> +91-8448211202</a>
+                        <h3>3. Claim Reporting Window &amp; Proof</h3>
+                        <p>To ensure quick and fair resolution, buyers must notify our Wankaner trade desk within <strong>48 hours of delivery</strong> along with clear photographs/unboxing videos of the bags, batch markings, and a copy of the signed transport LR receipt.</p>
+
+                        <h3>4. Refund &amp; Settlement Timeline</h3>
+                        <p>Once a claim is verified and approved by our trade desk, refunds or GST credit notes are processed directly to the buyer’s registered bank account via NEFT/RTGS/UPI within <strong>5 to 7 business days</strong>.</p>
+
+                        <div class="policy-contact-box">
+                            <h4><i class="fa-solid fa-headset"></i> Order Assistance &amp; Claims Desk</h4>
+                            <p><strong>Contact Person:</strong> <?= e($brand['founder']) ?> — AMSB GLOBAL</p>
+                            <p><strong>Phone / WhatsApp:</strong> <a href="tel:+<?= e($tel) ?>"><?= e($disp_phone) ?></a></p>
+                            <p><strong>Email:</strong> <a href="mailto:<?= e($mail) ?>"><?= e($mail) ?></a></p>
+                            <p><strong>Address:</strong> Wankaner, Morbi, Gujarat - 363621</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </article>
+
+            <!-- Right Sticky Sidebar -->
+            <aside class="bd-sidebar">
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-scale-balanced"></i> Legal &amp; Trade Policies</h4>
+                    <ul class="policy-nav">
+                        <li><a href="privacy-policy.php"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a></li>
+                        <li><a href="refund-policy.php" class="active"><i class="fa-solid fa-rotate-left"></i> Refund &amp; Cancellation</a></li>
+                        <li><a href="shipping-policy.php"><i class="fa-solid fa-truck-fast"></i> Shipping &amp; Dispatch</a></li>
+                        <li><a href="terms-and-conditions.php"><i class="fa-solid fa-file-contract"></i> Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-magnifying-glass"></i> Search Spices</h4>
+                    <form action="products.php" method="GET" class="sb-search-form">
+                        <input type="search" name="q" placeholder="Search chilli, turmeric..." required>
+                        <button type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form>
+                </div>
+
+                <?php if (!empty($nav_cats)): ?>
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-layer-group"></i> Wholesale Categories</h4>
+                    <ul class="sb-cat-list">
+                        <?php foreach ($nav_cats as $cslug => $cd): ?>
+                        <li>
+                            <a href="category.php?slug=<?= urlencode($cslug) ?>">
+                                <span><?= e($cd['name']) ?></span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <?php endif; ?>
+
+                <div class="pd-desk-card">
+                    <div class="pdd-top">
+                        <div class="pdd-ico"><i class="fa-solid fa-user-tie"></i></div>
+                        <div>
+                            <small>Direct Founder Desk</small>
+                            <h4><?= e($brand['founder']) ?></h4>
+                            <span>AMSB GLOBAL • Wankaner, Morbi</span>
+                        </div>
+                    </div>
+                    <p>Have a question regarding a running order or want to request a courier sample before ordering?</p>
+                    <div class="pdd-links">
+                        <a href="contact.php"><i class="fa-solid fa-paper-plane"></i> Contact Trade Desk</a>
+                        <a href="tel:+<?= e($tel) ?>"><i class="fa-solid fa-phone"></i> <?= e($disp_phone) ?></a>
+                    </div>
+                </div>
+            </aside>
 
         </div>
-    </div>
-</section>
+    </section>
 
-<?php 
-include ('includes/inquiry-form.php');
-include 'includes/footer.php'; 
-?>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tg = document.querySelector('.tg');
+    const nav = document.getElementById('nav');
+    if (tg && nav && !tg.dataset.bound) {
+        tg.dataset.bound = '1';
+        tg.addEventListener('click', () => {
+            const exp = tg.getAttribute('aria-expanded') === 'true';
+            tg.setAttribute('aria-expanded', String(!exp));
+            nav.classList.toggle('open');
+        });
+    }
+});
+</script>
+
+<?php include 'includes/footer.php'; ?>

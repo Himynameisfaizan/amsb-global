@@ -167,6 +167,7 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_o
     <link rel="stylesheet" href="<?= e(asset('assets/style/blogs.css')) ?>">
     <link rel="stylesheet" href="<?= e(asset('assets/style/contact.css')) ?>">
     <link rel="stylesheet" href="<?= e(asset('assets/style/custom.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset('assets/style/policy.css')) ?>">
     <?php foreach (($extra_css ?? []) as $css): ?>
     <link rel="stylesheet" href="<?= e(asset($css)) ?>">
     <?php endforeach; ?>

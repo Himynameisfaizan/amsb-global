@@ -1,93 +1,190 @@
 <?php
-include('config/connect.php');
+if (session_status() === PHP_SESSION_NONE) session_start();
+include_once 'config/connect.php';
 
-$pageTitle = "Shipping and Delivery Policy | Bhagirath Enterprises";
-$meta_description = "Learn about domestic and international shipping options for premium spices, dry fruits, and seeds by Bhagirath Enterprises[cite: 24].";
-$meta_key = "shipping policy, delivery policy, bhagirath enterprises, export delivery";
+$https_pl = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? '') == 443);
+$base_pl  = ($https_pl ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/';
+$curr_pl  = $base_pl . basename($_SERVER['PHP_SELF']);
 
-include 'includes/header.php';
-include 'includes/breadcrumb.php';
+$page_meta = [
+    'title' => 'Shipping & Dispatch Policy | AMSB GLOBAL — Pan-India Bulk Spice Supply',
+    'desc'  => 'Learn about courier sample dispatch, part-load and full-truck transport timelines, GST/E-Way bill paperwork, and packaging standards at AMSB GLOBAL, Wankaner, Morbi.',
+    'key'   => 'AMSB Global shipping policy, bulk spice transport Morbi Gujarat, wholesale red chilli dispatch India',
+    'schema' => '<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "' . $curr_pl . '#webpage",
+      "url": "' . $curr_pl . '",
+      "name": "Shipping and Dispatch Policy - AMSB GLOBAL",
+      "description": "Pan-India wholesale transport, dispatch timelines, and moisture-safe packaging standards of AMSB GLOBAL.",
+      "inLanguage": "en-IN",
+      "isPartOf": { "@id": "' . $base_pl . '#website" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "' . $curr_pl . '#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "' . $base_pl . '" },
+        { "@type": "ListItem", "position": 2, "name": "Shipping & Dispatch Policy", "item": "' . $curr_pl . '" }
+      ]
+    }
+  ]
+}
+</script>'
+];
+
+include_once 'includes/header.php';
 ?>
 
-<section class="py-5" style="background-color: #f8f9fa;">
-    <div class="container">
-        <div class="row g-5">
-            
-            <!-- LEFT COLUMN: Content -->
-            <div class="col-lg-8">
-                <div class="bg-white p-4 p-md-5 rounded shadow-sm border">
-                    <h1 class="mb-4" style="color: #2b5e2c; font-weight: 700;">Shipping and Delivery Policy</h1>
-                    <p class="text-muted mb-5"><strong>Last Updated:</strong> <?= date('F d, Y'); ?></p>
-                    
-                    <h3 class="mt-5 mb-3" style="color: #e65c00; font-size: 1.3rem;">Shipping Policy</h3>
-                    
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">1. Order Processing & Dispatch</h4>
-                    <p>Standard retail orders of spices and dry fruits are processed and dispatched within <strong>3 to 5 business days</strong>[cite: 24]. Bulk wholesale and international container exports follow custom schedules based on documentation and phytosanitary processing[cite: 24].</p>
+<main id="main" class="policy-page">
 
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">2. Domestic Delivery (Within India)</h4>
-                    <p>Standard delivery across India takes approximately <strong>5 to 7 business days</strong> depending on the delivery location[cite: 24].</p>
-
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">3. International Shipping & Exports</h4>
-                    <p>International shipments are handled via air or sea freight[cite: 24]. <strong>Note:</strong> The buyer is fully responsible for destination country customs duties, import clearance, and local taxes[cite: 24]. Bhagirath Enterprises provides all mandatory Indian export compliance documentation[cite: 24].</p>
-
-                    <hr class="my-5">
-
-                    <h3 class="mb-3" style="color: #e65c00; font-size: 1.3rem;">Returns Policy</h3>
-                    
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">1. Non-Returnable Goods</h4>
-                    <p>Due to stringent food safety and agricultural standards (FSSAI guidelines), <strong>we do not accept standard returns</strong> on consumable items like seeds, kernels, and spices once shipped[cite: 24].</p>
-
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">2. Damaged or Incorrect Shipments</h4>
-                    <p>Exceptions apply strictly if you receive wrong or transit-damaged items[cite: 24]. Claims must be filed within <strong>48 hours of receipt</strong> along with an unboxing video/photos[cite: 24].</p>
-                </div>
+    <!-- 1. SOFT LIGHT BLUE POLICY HERO -->
+    <section class="bd-hero">
+        <div class="wrap bd-hero-inner">
+            <nav class="bc" aria-label="Breadcrumb">
+                <a href="./"><i class="fa-solid fa-house"></i> Home</a>
+                <span>/</span>
+                <span class="curr">Shipping &amp; Dispatch Policy</span>
+            </nav>
+            <div class="hero-badges">
+                <span class="pill-primary"><i class="fa-solid fa-truck-fast"></i> Pan-India Road Transport</span>
+                <span class="pill-secondary"><i class="fa-regular fa-calendar"></i> Last Updated: <?= date('d M Y') ?></span>
             </div>
+            <h1>Shipping &amp; <span class="txt-primary">Dispatch Policy</span></h1>
+            <p class="lead">Everything wholesale buyers need to know about sample couriers, bulk dispatch schedules, transport LR sharing, and moisture-proof packaging from <strong>Wankaner, Morbi (Gujarat)</strong>.</p>
+        </div>
+    </section>
 
-            <!-- RIGHT COLUMN: Sidebar Widgets -->
-            <div class="col-lg-4">
-                <div class="sidebar-widgets position-sticky" style="top: 20px;">
-                    <div class="widget-box bg-white p-4 rounded shadow-sm border mb-4">
-                        <h5 class="fw-bold mb-3 border-bottom pb-2">Search Products</h5>
-                        <form action="products.php" method="GET" class="d-flex">
-                            <input type="text" name="search" class="form-control me-2" placeholder="Search..." required style="font-size: 0.9rem;">
-                            <button type="submit" class="btn text-white px-3" style="background: var(--primary-green, #2b5e2c);"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        </form>
-                    </div>
+    <!-- 2. POLICY CONTENT + STICKY SIDEBAR -->
+    <section class="sec bd-body-sec">
+        <div class="wrap bd-grid">
 
-                    <div class="widget-box bg-white p-4 rounded shadow-sm border mb-4">
-                        <h5 class="fw-bold mb-3 border-bottom pb-2">Categories</h5>
-                        <ul class="list-unstyled mb-0 category-list">
-                            <?php
-                            $catQuery = mysqli_query($conn, "SELECT * FROM categories WHERE status = 1");
-                            if ($catQuery && mysqli_num_rows($catQuery) > 0) {
-                                while($catRow = mysqli_fetch_assoc($catQuery)) {
-                            ?>
-                            <li class="mb-2 pb-2 border-bottom">
-                                <a href="category.php?slug=<?= htmlspecialchars($catRow['slug_url']) ?>" class="text-decoration-none d-flex justify-content-between align-items-center text-muted" style="font-size: 0.95rem;">
-                                    <span><i class="fa-solid fa-angle-right me-2" style="font-size: 0.75rem;"></i> <?= htmlspecialchars($catRow['categories']) ?></span>
-                                </a>
-                            </li>
-                            <?php 
-                                }
-                            }
-                            ?>
+            <!-- Left Column: Policy Content -->
+            <article class="bd-main">
+                <div class="bd-content-card policy-card">
+                    <div class="dyn-richtext bd-prose">
+                        <p><strong>AMSB GLOBAL</strong> operates from <strong>Wankaner, Morbi, Gujarat (363621)</strong>—strategically connected to major national highway networks for reliable, cost-effective Pan-India road transport of bulk <strong>Red Chilli Powder</strong> and <strong>Turmeric Powder</strong>.</p>
+
+                        <h2>1. Courier Sample Dispatch</h2>
+                        <p>Physical evaluation samples requested by genuine B2B buyers are packed hygienically and dispatched via leading courier services within <strong>24 to 48 business hours</strong>. Tracking details are shared directly on WhatsApp.</p>
+
+                        <h2>2. Bulk Order Processing &amp; Loading Time</h2>
+                        <ul>
+                            <li><strong>Ready-Stock Standard Grades:</strong> Dispatched within <strong>1 to 3 business days</strong> after order and payment confirmation.</li>
+                            <li><strong>Fresh Custom Grinding / Large Truck Loads (10–25 MT):</strong> Dispatched within <strong>3 to 5 business days</strong> depending on required mesh fineness, blending, and custom bag printing.</li>
                         </ul>
-                    </div>
 
-                    <div class="widget-box rounded shadow-sm text-center p-4 text-white" style="background: linear-gradient(135deg, var(--primary-green, #2b5e2c) 0%, #1a3f1b 100%);">
-                        <div class="icon-wrap mb-3"><i class="fa-solid fa-headset fs-1 text-white opacity-75"></i></div>
-                        <h4 class="fw-bold mb-2 text-white">Bulk Export Inquiry?</h4>
-                        <p class="small mb-4 opacity-75">Get reliable global shipping for wholesale commodities.</p>
-                        <a href="contact.php" class="btn bg-white w-100 fw-bold shadow-sm mb-3" style="color: var(--primary-green, #2b5e2c);">Request Quote</a>
-                        <a href="tel:+918448211202" class="text-white text-decoration-none small fw-bold"><i class="fa-solid fa-phone me-1"></i> +91-8448211202</a>
+                        <h2>3. Pan-India Road Transport &amp; Delivery Timelines</h2>
+                        <p>We arrange both <strong>Part Truck Loads (PTL / 200 kg to 5 MT)</strong> and <strong>Full Truck Loads (FTL / 10 MT to 25 MT)</strong> through reputed interstate transport carriers, or we can load directly onto the buyer’s nominated transport vehicle.</p>
+                        <ul>
+                            <li><strong>Within Gujarat (Rajkot, Ahmedabad, Surat, Vadodara, etc.):</strong> Typically <strong>1 to 2 business days</strong> after dispatch.</li>
+                            <li><strong>Neighbouring &amp; Major Trade States (Maharashtra, Rajasthan, MP, Delhi NCR):</strong> Typically <strong>3 to 5 business days</strong>.</li>
+                            <li><strong>Rest of India (South, East &amp; North-East Mandis):</strong> Typically <strong>5 to 8 business days</strong> depending on route and transport hub.</li>
+                        </ul>
+
+                        <h2>4. Trade Paperwork &amp; Live Loading Transparency</h2>
+                        <p>Every commercial shipment dispatched from our Wankaner hub includes complete, compliant documentation:</p>
+                        <ul>
+                            <li>Valid <strong>GST Tax Invoice</strong> with accurate HSN codes (09042211 / 09103030).</li>
+                            <li>Generated <strong>E-Way Bill</strong> for smooth interstate transit.</li>
+                            <li><strong>Transport Lorry Receipt (LR / Bilty)</strong> and weighbridge slip (for full-truck orders), shared immediately via WhatsApp and email.</li>
+                            <li>Pre-loading bag photos or a quick WhatsApp video verification available on request.</li>
+                        </ul>
+
+                        <h2>5. Freight Charges &amp; Transit Responsibility</h2>
+                        <p>Unless a delivered (FOR) rate is explicitly agreed upon in the written quotation, wholesale rates are quoted on an <strong>Ex-Wankaner (Morbi)</strong> basis and road transport freight is payable by the buyer on a “To-Pay” or pre-agreed basis. Transit insurance can be arranged at buyer request.</p>
+
+                        <h2>6. Moisture-Safe Bulk Packaging</h2>
+                        <p>To protect ground spices from humidity, dust, and transit handling, all wholesale orders are packed in <strong>5 kg, 10 kg, 25 kg, or 50 kg heavy-duty PP/HDPE bags with food-grade inner poly liners</strong>.</p>
+
+                        <h2>7. Delivery Inspection &amp; Reporting Transit Issues</h2>
+                        <p>Buyers are requested to inspect bag count, net weight, and outer condition at the time of unloading from the transport carrier. Any visible transit damage or bag shortage should be noted on the transport LR copy and reported to our trade desk within <strong>48 hours of delivery</strong> with photo/video proof.</p>
+
+                        <div class="policy-contact-box">
+                            <h4><i class="fa-solid fa-truck-ramp-box"></i> Dispatch &amp; Transport Coordination Desk</h4>
+                            <p><strong>Contact Person:</strong> <?= e($brand['founder']) ?> — AMSB GLOBAL</p>
+                            <p><strong>Dispatch Hub:</strong> Wankaner, Morbi, Gujarat - 363621</p>
+                            <p><strong>Phone / WhatsApp:</strong> <a href="tel:+<?= e($tel) ?>"><?= e($disp_phone) ?></a></p>
+                            <p><strong>Email:</strong> <a href="mailto:<?= e($mail) ?>"><?= e($mail) ?></a></p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </article>
+
+            <!-- Right Sticky Sidebar -->
+            <aside class="bd-sidebar">
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-scale-balanced"></i> Legal &amp; Trade Policies</h4>
+                    <ul class="policy-nav">
+                        <li><a href="privacy-policy.php"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a></li>
+                        <li><a href="refund-policy.php"><i class="fa-solid fa-rotate-left"></i> Refund &amp; Cancellation</a></li>
+                        <li><a href="shipping-policy.php" class="active"><i class="fa-solid fa-truck-fast"></i> Shipping &amp; Dispatch</a></li>
+                        <li><a href="terms-and-conditions.php"><i class="fa-solid fa-file-contract"></i> Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-magnifying-glass"></i> Search Spices</h4>
+                    <form action="products.php" method="GET" class="sb-search-form">
+                        <input type="search" name="q" placeholder="Search chilli, turmeric..." required>
+                        <button type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form>
+                </div>
+
+                <?php if (!empty($nav_cats)): ?>
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-layer-group"></i> Wholesale Categories</h4>
+                    <ul class="sb-cat-list">
+                        <?php foreach ($nav_cats as $cslug => $cd): ?>
+                        <li>
+                            <a href="category.php?slug=<?= urlencode($cslug) ?>">
+                                <span><?= e($cd['name']) ?></span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <?php endif; ?>
+
+                <div class="pd-desk-card">
+                    <div class="pdd-top">
+                        <div class="pdd-ico"><i class="fa-solid fa-truck-fast"></i></div>
+                        <div>
+                            <small>Transport Rate Check</small>
+                            <h4><?= e($brand['founder']) ?></h4>
+                            <span>AMSB GLOBAL • Wankaner, Morbi</span>
+                        </div>
+                    </div>
+                    <p>Want to check road transport cost and delivery days to your city or mandi?</p>
+                    <div class="pdd-links">
+                        <a href="contact.php"><i class="fa-solid fa-file-invoice-dollar"></i> Request Delivered Rate</a>
+                        <a href="tel:+<?= e($tel) ?>"><i class="fa-solid fa-phone"></i> <?= e($disp_phone) ?></a>
+                    </div>
+                </div>
+            </aside>
 
         </div>
-    </div>
-</section>
+    </section>
 
-<?php 
-include ('includes/inquiry-form.php');
-include 'includes/footer.php'; 
-?>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tg = document.querySelector('.tg');
+    const nav = document.getElementById('nav');
+    if (tg && nav && !tg.dataset.bound) {
+        tg.dataset.bound = '1';
+        tg.addEventListener('click', () => {
+            const exp = tg.getAttribute('aria-expanded') === 'true';
+            tg.setAttribute('aria-expanded', String(!exp));
+            nav.classList.toggle('open');
+        });
+    }
+});
+</script>
+
+<?php include 'includes/footer.php'; ?>

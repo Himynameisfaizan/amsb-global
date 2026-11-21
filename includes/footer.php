@@ -18,13 +18,15 @@
             </div>
         </div>
         <div>
-            <h4>Company</h4>
+            <h4>Quick Links</h4>
             <ul>
                 <li><a href="about.php">About Us</a></li>
                 <li><a href="products.php">All Products</a></li>
                 <li><a href="service.php">B2B Services</a></li>
                 <li><a href="blog.php">Trade Insights</a></li>
                 <li><a href="contact.php">Contact Us</a></li>
+                <li><a href="privacy-policy.php">Privacy Policy</a></li>
+                <li><a href="terms-condition.php">Terms & Conditions</a></li>
             </ul>
         </div>
         <div>
@@ -48,7 +50,7 @@
         </div>
     </div>
     <div class="wrap fb">
-        <span>&copy; <?= date('Y') ?> <?= e($brand['name']) ?>. All rights reserved.</span>
+        <span>&copy; <?= date('Y') ?> <?= e($brand['name']) ?>. All rights reserved. Designed & Developed by <a href="https://www.digitalwebtrackers.com/" target="_blank" rel="noopener" style="color: white;">Digital Web Trackers</a></span>
         <?php if (!empty($brand['licences'])): ?>
         <span class="lic">
             <?php foreach ($brand['licences'] as $l): ?><em><?= e($l) ?></em><?php endforeach; ?>

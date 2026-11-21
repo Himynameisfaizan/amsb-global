@@ -1,128 +1,197 @@
 <?php
-include('config/connect.php');
+if (session_status() === PHP_SESSION_NONE) session_start();
+include_once 'config/connect.php';
 
-// SEO Meta Variables
-$pageTitle = "Privacy Policy | Bhagirath Enterprises";
-$meta_description = "Read the Privacy Policy of Bhagirath Enterprises regarding personal data protection for our premium spices, dry fruits, seeds, and kernels.";
-$meta_key = "privacy policy, bhagirath enterprises, spices export, dry fruits, seeds and kernels";
+$https_pl = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? '') == 443);
+$base_pl  = ($https_pl ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/';
+$curr_pl  = $base_pl . basename($_SERVER['PHP_SELF']);
 
-include 'includes/header.php';
-include 'includes/breadcrumb.php';
+$page_meta = [
+    'title' => 'Privacy Policy | AMSB GLOBAL — Wholesale Spice Trader, Morbi',
+    'desc'  => 'Read the Privacy Policy of AMSB GLOBAL (Wankaner, Morbi, Gujarat) detailing how we handle and protect buyer inquiry, GST billing, and wholesale trade data.',
+    'key'   => 'AMSB Global privacy policy, B2B spice trader data protection, Wankaner Morbi wholesale spices',
+    'schema' => '<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "' . $curr_pl . '#webpage",
+      "url": "' . $curr_pl . '",
+      "name": "Privacy Policy - AMSB GLOBAL",
+      "description": "Privacy Policy for B2B wholesale buyers and visitors of AMSB GLOBAL, Wankaner, Morbi, Gujarat.",
+      "inLanguage": "en-IN",
+      "isPartOf": { "@id": "' . $base_pl . '#website" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "' . $curr_pl . '#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "' . $base_pl . '" },
+        { "@type": "ListItem", "position": 2, "name": "Privacy Policy", "item": "' . $curr_pl . '" }
+      ]
+    }
+  ]
+}
+</script>'
+];
+
+include_once 'includes/header.php';
 ?>
 
-<!-- Main Policy Section (Blog Details Style: Left Content + Right Sidebar) -->
-<section class="py-5" style="background-color: #f8f9fa;">
-    <div class="container">
-        <div class="row g-5">
-            
-            <!-- LEFT COLUMN: Policy Content -->
-            <div class="col-lg-8">
-                <div class="bg-white p-4 p-md-5 rounded shadow-sm border">
-                    <h1 class="mb-3" style="color: #2b5e2c; font-weight: 700;">Privacy Policy</h1>
-                    <p class="text-muted mb-5"><strong>Last Updated:</strong> <?= date('F d, Y'); ?></p>
+<main id="main" class="policy-page">
 
-                    <p>Welcome to <strong>Bhagirath Enterprises</strong>. We respect your privacy and are committed to protecting your personal data. This Privacy Policy outlines how we collect, use, process, and safeguard your information when you visit our website, purchase our premium agricultural commodities—including <strong>spices, dry fruits, seeds, and kernels</strong>—or use our services.</p>
-
-                    <h4 class="mt-5" style="color: #e65c00; font-size: 1.2rem;">1. Information We Collect</h4>
-                    <p>To provide you with a seamless and secure shopping and wholesale inquiry experience, we collect the following types of information:</p>
-                    <ul>
-                        <li><strong>Personal Identification Information:</strong> Name, email address, phone number, and business/company details (if applicable).</li>
-                        <li><strong>Shipping & Billing Information:</strong> Delivery address, billing address, postal code, and destination country for domestic or international freight.</li>
-                        <li><strong>Technical Data:</strong> IP address, browser type, time zone setting, operating system, and platform details when browsing our catalog.</li>
-                        <li><strong>Trade & Bulk Order Compliance Data:</strong> For bulk and wholesale orders of spices, dry fruits, or seeds, we may collect business credentials, GST/VAT numbers, or import-export licenses as required by trade regulations.</li>
-                    </ul>
-
-                    <h4 class="mt-5" style="color: #e65c00; font-size: 1.2rem;">2. How We Use Your Information</h4>
-                    <p>We use the information we collect for the following purposes:</p>
-                    <ul>
-                        <li>To process, pack, and fulfill your orders for spices, dry fruits, seeds, and kernels, ensuring quality dispatch.</li>
-                        <li>To communicate with you regarding order confirmations, shipping updates, tracking, and customer support.</li>
-                        <li>To process online payments securely and prevent fraudulent activities.</li>
-                        <li>To comply with food safety, agricultural export standards, and legal trade obligations.</li>
-                        <li>To improve our website functionality, product display, and user experience.</li>
-                    </ul>
-
-                    <h4 class="mt-5" style="color: #e65c00; font-size: 1.2rem;">3. Secure Payment Processing</h4>
-                    <p>We do not store your credit card, debit card, UPI, or net banking details on our servers. All financial transactions are handled through secure, PCI-DSS compliant third-party payment gateways (such as Razorpay). Your payment data is fully encrypted and protected under strict industry standards.</p>
-
-                    <h4 class="mt-5" style="color: #e65c00; font-size: 1.2rem;">4. Third-Party Data Sharing</h4>
-                    <p>We do not sell or trade your personal information. However, trusted third parties assist us in conducting our business operations, including:</p>
-                    <ul>
-                        <li><strong>Logistics & Shipping Partners:</strong> Courier companies, transport services, and freight forwarders required to deliver your shipments safely.</li>
-                        <li><strong>Payment Gateways:</strong> Authorized financial processors for transaction management.</li>
-                        <li><strong>Regulatory Authorities:</strong> Government or customs bodies when legally required for export compliance.</li>
-                    </ul>
-
-                    <h4 class="mt-5" style="color: #e65c00; font-size: 1.2rem;">5. Cookies and Tracking Technologies</h4>
-                    <p>Our website uses cookies to enhance browsing efficiency, maintain session preferences, and analyze site traffic. You can choose to disable cookies through your browser, though certain features of the website may not function properly as a result.</p>
-
-                    <h4 class="mt-5" style="color: #e65c00; font-size: 1.2rem;">6. Data Security</h4>
-                    <p>We implement robust administrative, technical, and physical security measures, including SSL encryption and secure firewalls, to protect your personal data against unauthorized access, disclosure, or misuse.</p>
-
-                    <h4 class="mt-5" style="color: #e65c00; font-size: 1.2rem;">7. Contact Us</h4>
-                    <p>If you have any questions or concerns regarding this Privacy Policy, please feel free to contact us:</p>
-                    <div class="p-3 mt-3 rounded" style="background-color: #f1f5f9; border-left: 4px solid var(--primary-green, #2b5e2c);">
-                        <p class="mb-1"><strong>Bhagirath Enterprises</strong></p>
-                        <p class="mb-1"><strong>Specialization:</strong> Exporters & Suppliers of Spices, Dry Fruits, Seeds & Kernels</p>
-                        <p class="mb-1"><strong>Phone:</strong> +91-8448211202</p>
-                        <p class="mb-0"><strong>Email:</strong> support@bhagirathenterprises.com</p>
-                    </div>
-                </div>
+    <!-- 1. SOFT LIGHT BLUE POLICY HERO -->
+    <section class="bd-hero">
+        <div class="wrap bd-hero-inner">
+            <nav class="bc" aria-label="Breadcrumb">
+                <a href="./"><i class="fa-solid fa-house"></i> Home</a>
+                <span>/</span>
+                <span class="curr">Privacy Policy</span>
+            </nav>
+            <div class="hero-badges">
+                <span class="pill-primary"><i class="fa-solid fa-shield-halved"></i> Buyer Data Protection</span>
+                <span class="pill-secondary"><i class="fa-regular fa-calendar"></i> Last Updated: <?= date('d M Y') ?></span>
             </div>
+            <h1>Privacy <span class="txt-primary">Policy</span></h1>
+            <p class="lead">How <strong>AMSB GLOBAL</strong> collects, uses, and safeguards your business and contact information when you enquire about or purchase bulk Red Chilli Powder and Turmeric Powder.</p>
+        </div>
+    </section>
 
-            <!-- RIGHT COLUMN: Sidebar Widgets -->
-            <div class="col-lg-4">
-                <div class="sidebar-widgets position-sticky" style="top: 20px;">
-                    
-                    <!-- Search Widget -->
-                    <div class="widget-box bg-white p-4 rounded shadow-sm border mb-4">
-                        <h5 class="fw-bold mb-3 border-bottom pb-2">Search Products</h5>
-                        <form action="products.php" method="GET" class="d-flex">
-                            <input type="text" name="search" class="form-control me-2" placeholder="Search spices, dry fruits..." required style="font-size: 0.9rem;">
-                            <button type="submit" class="btn text-white px-3" style="background: var(--primary-green, #2b5e2c);"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        </form>
-                    </div>
+    <!-- 2. POLICY CONTENT + STICKY SIDEBAR -->
+    <section class="sec bd-body-sec">
+        <div class="wrap bd-grid">
 
-                    <!-- Categories Widget -->
-                    <div class="widget-box bg-white p-4 rounded shadow-sm border mb-4">
-                        <h5 class="fw-bold mb-3 border-bottom pb-2">Categories</h5>
-                        <ul class="list-unstyled mb-0 category-list">
-                            <?php
-                            $catQuery = mysqli_query($conn, "SELECT * FROM categories WHERE status = 1");
-                            if ($catQuery && mysqli_num_rows($catQuery) > 0) {
-                                while($catRow = mysqli_fetch_assoc($catQuery)) {
-                            ?>
-                            <li class="mb-2 pb-2 border-bottom">
-                                <a href="category.php?slug=<?= htmlspecialchars($catRow['slug_url']) ?>" class="text-decoration-none d-flex justify-content-between align-items-center text-muted" style="font-size: 0.95rem;">
-                                    <span><i class="fa-solid fa-angle-right me-2" style="font-size: 0.75rem;"></i> <?= htmlspecialchars($catRow['categories']) ?></span>
-                                </a>
-                            </li>
-                            <?php 
-                                }
-                            }
-                            ?>
+            <!-- Left Column: Policy Content -->
+            <article class="bd-main">
+                <div class="bd-content-card policy-card">
+                    <div class="dyn-richtext bd-prose">
+                        <p>Welcome to <strong>AMSB GLOBAL</strong>, headquartered in Wankaner, Morbi, Gujarat (363621). We respect your privacy and are committed to safeguarding the personal and commercial information shared by wholesalers, distributors, food manufacturers, retailers, and visitors browsing our website or contacting our trade desk.</p>
+
+                        <h2>1. Information We Collect</h2>
+                        <p>When you submit a bulk rate inquiry, request courier samples, or confirm a wholesale purchase order with AMSB GLOBAL, we may collect:</p>
+                        <ul>
+                            <li><strong>Contact &amp; Identity Details:</strong> Your name, firm/company name, phone or WhatsApp number, and business email address.</li>
+                            <li><strong>Billing &amp; Dispatch Details:</strong> Registered business address, delivery city/godown address, transport preferences, and GSTIN for generating valid GST Tax Invoices and E-Way bills.</li>
+                            <li><strong>Trade Order Preferences:</strong> Required spice varieties (Red Chilli Powder / Turmeric Powder), grade specifications, bag sizes (5 kg to 50 kg), and order quantities.</li>
+                            <li><strong>Basic Technical Data:</strong> Standard browser type, IP address, and page visit metrics collected automatically to keep our website fast, secure, and functional.</li>
                         </ul>
+
+                        <h2>2. How We Use Your Information</h2>
+                        <p>Your information is strictly used for genuine B2B trading and order execution:</p>
+                        <ul>
+                            <li>To prepare and send accurate daily wholesale rate quotations and dispatch physical courier samples.</li>
+                            <li>To process, pack, weigh, and dispatch bulk spice orders along with GST invoices, E-Way bills, and transport LR copies.</li>
+                            <li>To coordinate lot verification, pre-loading photos/videos, and delivery updates via phone, WhatsApp, or email.</li>
+                            <li>To comply with Indian tax laws (GST), FSSAI food safety norms, and statutory accounting requirements.</li>
+                        </ul>
+
+                        <h2>3. Payment &amp; Banking Confidentiality</h2>
+                        <p>Most wholesale trade orders at AMSB GLOBAL are settled via standard bank transfers (NEFT, RTGS, IMPS, or UPI). We do not store your net-banking credentials, debit/credit card details, or UPI PINs on our website servers. Only standard banking reference/UTR details required for GST accounting and payment reconciliation are maintained securely.</p>
+
+                        <h2>4. Information Sharing &amp; Third Parties</h2>
+                        <p>We <strong>never sell, rent, or trade</strong> your business contact list or pricing inquiries to third-party marketers or brokers. Information is shared strictly on a need-to-know basis with:</p>
+                        <ul>
+                            <li><strong>Courier &amp; Road Transport Partners:</strong> Only recipient name, phone number, and delivery address needed to deliver samples or bulk shipments safely.</li>
+                            <li><strong>Statutory &amp; Tax Authorities:</strong> Where legally required under GST, E-Way bill portals, or Indian law.</li>
+                        </ul>
+
+                        <h2>5. Cookies &amp; Website Analytics</h2>
+                        <p>Our website may use basic cookies to remember session settings and understand overall site performance. You can disable cookies anytime through your browser settings without losing access to our product catalogue or trade desk contact details.</p>
+
+                        <h2>6. Data Security &amp; Retention</h2>
+                        <p>We use SSL encryption, secure server hosting, and restricted administrative access to protect all inquiry records from unauthorized access or misuse. Commercial billing records are retained only for the duration required under Indian GST and business accounting regulations.</p>
+
+                        <h2>7. Contact Our Trade Desk</h2>
+                        <p>If you have any questions about this Privacy Policy or wish to update or remove your inquiry details from our records, please reach us directly:</p>
+
+                        <div class="policy-contact-box">
+                            <h4><i class="fa-solid fa-building"></i> AMSB GLOBAL</h4>
+                            <p><strong>Contact Person:</strong> <?= e($brand['founder']) ?></p>
+                            <p><strong>Products:</strong> Wholesale Red Chilli Powder &amp; Turmeric Powder</p>
+                            <p><strong>Address:</strong> Wankaner, Morbi, Gujarat - 363621, India</p>
+                            <p><strong>Phone / WhatsApp:</strong> <a href="tel:+<?= e($tel) ?>"><?= e($disp_phone) ?></a></p>
+                            <p><strong>Email:</strong> <a href="mailto:<?= e($mail) ?>"><?= e($mail) ?></a></p>
+                        </div>
                     </div>
-
-                   
-
-                    <!-- Request Quote Banner -->
-                    <div class="widget-box rounded shadow-sm text-center p-4 text-white" style="background: linear-gradient(135deg, var(--primary-green, #2b5e2c) 0%, #1a3f1b 100%);">
-                        <div class="icon-wrap mb-3"><i class="fa-solid fa-headset fs-1 text-white opacity-75"></i></div>
-                        <h4 class="fw-bold mb-2 text-white">Bulk Spices & Dry Fruits?</h4>
-                        <p class="small mb-4 opacity-75">Get premium quality export-grade commodities at wholesale prices.</p>
-                        <a href="contact.php" class="btn bg-white w-100 fw-bold shadow-sm mb-3" style="color: var(--primary-green, #2b5e2c);">Request Quote</a>
-                        <a href="tel:+918448211202" class="text-white text-decoration-none small fw-bold"><i class="fa-solid fa-phone me-1"></i> +91-8448211202</a>
-                    </div>
-
                 </div>
-            </div>
+            </article>
+
+            <!-- Right Sticky Sidebar -->
+            <aside class="bd-sidebar">
+                <!-- Policy Switcher -->
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-scale-balanced"></i> Legal &amp; Trade Policies</h4>
+                    <ul class="policy-nav">
+                        <li><a href="privacy-policy.php" class="active"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a></li>
+                        <li><a href="refund-policy.php"><i class="fa-solid fa-rotate-left"></i> Refund &amp; Cancellation</a></li>
+                        <li><a href="shipping-policy.php"><i class="fa-solid fa-truck-fast"></i> Shipping &amp; Dispatch</a></li>
+                        <li><a href="terms-and-conditions.php"><i class="fa-solid fa-file-contract"></i> Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+
+                <!-- Search Products -->
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-magnifying-glass"></i> Search Spices</h4>
+                    <form action="products.php" method="GET" class="sb-search-form">
+                        <input type="search" name="q" placeholder="Search chilli, turmeric..." required>
+                        <button type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form>
+                </div>
+
+                <!-- Dynamic Categories -->
+                <?php if (!empty($nav_cats)): ?>
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-layer-group"></i> Wholesale Categories</h4>
+                    <ul class="sb-cat-list">
+                        <?php foreach ($nav_cats as $cslug => $cd): ?>
+                        <li>
+                            <a href="category.php?slug=<?= urlencode($cslug) ?>">
+                                <span><?= e($cd['name']) ?></span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <?php endif; ?>
+
+                <!-- Direct Trade Desk Card -->
+                <div class="pd-desk-card">
+                    <div class="pdd-top">
+                        <div class="pdd-ico"><i class="fa-solid fa-headset"></i></div>
+                        <div>
+                            <small>Direct Trade Support</small>
+                            <h4><?= e($brand['founder']) ?></h4>
+                            <span>AMSB GLOBAL • Wankaner, Morbi</span>
+                        </div>
+                    </div>
+                    <p>Need today’s bulk wholesale rate or courier samples for Red Chilli Powder &amp; Turmeric Powder?</p>
+                    <div class="pdd-links">
+                        <a href="contact.php"><i class="fa-solid fa-file-invoice-dollar"></i> Request Bulk Quote</a>
+                        <a href="tel:+<?= e($tel) ?>"><i class="fa-solid fa-phone"></i> <?= e($disp_phone) ?></a>
+                    </div>
+                </div>
+            </aside>
 
         </div>
-    </div>
-</section>
+    </section>
 
-<?php 
-include ('includes/inquiry-form.php');
-include ('includes/footer.php'); 
-?>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tg = document.querySelector('.tg');
+    const nav = document.getElementById('nav');
+    if (tg && nav && !tg.dataset.bound) {
+        tg.dataset.bound = '1';
+        tg.addEventListener('click', () => {
+            const exp = tg.getAttribute('aria-expanded') === 'true';
+            tg.setAttribute('aria-expanded', String(!exp));
+            nav.classList.toggle('open');
+        });
+    }
+});
+</script>
+
+<?php include 'includes/footer.php'; ?>

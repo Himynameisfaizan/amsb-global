@@ -1,94 +1,178 @@
 <?php
-include('config/connect.php');
+if (session_status() === PHP_SESSION_NONE) session_start();
+include_once 'config/connect.php';
 
-$pageTitle = "Terms & Conditions | Bhagirath Enterprises";
-$meta_description = "Read the terms and conditions of Bhagirath Enterprises for purchasing spices, dry fruits, seeds, and kernels[cite: 25].";
-$meta_key = "terms and conditions, bhagirath enterprises, export terms";
+$https_pl = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? '') == 443);
+$base_pl  = ($https_pl ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/';
+$curr_pl  = $base_pl . basename($_SERVER['PHP_SELF']);
 
-include 'includes/header.php';
-include 'includes/breadcrumb.php';
+$page_meta = [
+    'title' => 'Terms & Conditions | AMSB GLOBAL — Wholesale Spice Trade, Morbi',
+    'desc'  => 'Read the B2B wholesale trading Terms and Conditions of AMSB GLOBAL (Wankaner, Morbi, Gujarat) for Red Chilli Powder and Turmeric Powder orders.',
+    'key'   => 'AMSB Global terms and conditions, wholesale spice trade terms Gujarat, B2B supply agreement Morbi',
+    'schema' => '<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "' . $curr_pl . '#webpage",
+      "url": "' . $curr_pl . '",
+      "name": "Terms and Conditions - AMSB GLOBAL",
+      "description": "Commercial terms and conditions governing website usage and wholesale spice trade with AMSB GLOBAL.",
+      "inLanguage": "en-IN",
+      "isPartOf": { "@id": "' . $base_pl . '#website" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "' . $curr_pl . '#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "' . $base_pl . '" },
+        { "@type": "ListItem", "position": 2, "name": "Terms & Conditions", "item": "' . $curr_pl . '" }
+      ]
+    }
+  ]
+}
+</script>'
+];
+
+include_once 'includes/header.php';
 ?>
 
-<section class="py-5" style="background-color: #f8f9fa;">
-    <div class="container">
-        <div class="row g-5">
-            
-            <!-- LEFT COLUMN: Content -->
-            <div class="col-lg-8">
-                <div class="bg-white p-4 p-md-5 rounded shadow-sm border">
-                    <h1 class="mb-4" style="color: #2b5e2c; font-weight: 700;">Terms & Conditions</h1>
-                    <p class="text-muted mb-5"><strong>Last Updated:</strong> <?= date('F d, Y'); ?></p>
+<main id="main" class="policy-page">
 
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">1. Introduction</h4>
-                    <p>Welcome to <strong>Bhagirath Enterprises</strong>[cite: 25]. By browsing our website and purchasing our agricultural commodities, spices, dry fruits, seeds, and kernels, you agree to abide by these Terms & Conditions[cite: 25].</p>
+    <!-- 1. SOFT LIGHT BLUE POLICY HERO -->
+    <section class="bd-hero">
+        <div class="wrap bd-hero-inner">
+            <nav class="bc" aria-label="Breadcrumb">
+                <a href="./"><i class="fa-solid fa-house"></i> Home</a>
+                <span>/</span>
+                <span class="curr">Terms &amp; Conditions</span>
+            </nav>
+            <div class="hero-badges">
+                <span class="pill-primary"><i class="fa-solid fa-file-contract"></i> Commercial Trade Terms</span>
+                <span class="pill-secondary"><i class="fa-regular fa-calendar"></i> Last Updated: <?= date('d M Y') ?></span>
+            </div>
+            <h1>Terms &amp; <span class="txt-primary">Conditions</span></h1>
+            <p class="lead">Standard commercial terms governing website access, daily wholesale rate quotations, sample approvals, and bulk spice transactions with <strong>AMSB GLOBAL</strong>.</p>
+        </div>
+    </section>
 
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">2. Natural Variations in Products</h4>
-                    <p>We deal in natural agricultural produce (spices, dry fruits, seeds). Minor variations in color, size, aroma, or texture may occur between harvest batches, which are natural characteristics and not defects[cite: 25].</p>
+    <!-- 2. POLICY CONTENT + STICKY SIDEBAR -->
+    <section class="sec bd-body-sec">
+        <div class="wrap bd-grid">
 
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">3. Pricing and Import Duties</h4>
-                    <p>Domestic prices include applicable taxes unless specified[cite: 25]. For international shipments, the buyer is solely responsible for all destination customs duties, import taxes, and local levies[cite: 25].</p>
+            <!-- Left Column: Policy Content -->
+            <article class="bd-main">
+                <div class="bd-content-card policy-card">
+                    <div class="dyn-richtext bd-prose">
+                        <h2>1. Acceptance of Terms</h2>
+                        <p>Welcome to <strong>AMSB GLOBAL</strong> (Wankaner, Morbi, Gujarat - 363621). By accessing this website, submitting a bulk inquiry, or placing a wholesale purchase order for Red Chilli Powder, Turmeric Powder, or other Indian spices, you agree to comply with these Terms &amp; Conditions.</p>
 
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">4. Culinary Disclaimer</h4>
-                    <p>Information on our website regarding spice benefits is for general culinary and informational purposes and does not substitute medical advice[cite: 25].</p>
+                        <h2>2. Daily Market Pricing &amp; Quotations</h2>
+                        <p>Agricultural spice prices fluctuate daily based on crop arrivals and mandi conditions. Written quotations shared by our trade desk are valid for the specific validity window mentioned on the quote (typically 24 to 48 hours). Final rates are locked only upon written order confirmation and agreed payment terms.</p>
 
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">5. Governing Law</h4>
-                    <p>Any disputes arising from purchases or website usage shall be governed by the laws of India and subject to local jurisdiction[cite: 25].</p>
+                        <h2>3. Natural Variations in Agricultural Spices</h2>
+                        <p>Because we supply 100% pure, unadulterated natural spices without artificial dyes or synthetic colour enhancers, minor natural variations in shade, aroma intensity, or oiliness may occur across seasonal harvest crops. However, every commercial lot supplied will remain within the agreed specification range and match the approved sample.</p>
 
-                    <h4 class="mt-4" style="font-size: 1.1rem; color: #2b5e2c; font-weight: 600;">6. Contact Information</h4>
-                    <div class="p-3 mt-3 rounded" style="background-color: #f1f5f9; border-left: 4px solid var(--primary-green, #2b5e2c);">
-                        <p class="mb-1"><strong>Bhagirath Enterprises</strong></p>
-                        <p class="mb-1"><strong>Email:</strong> support@bhagirathenterprises.com</p>
-                        <p class="mb-0"><strong>Phone:</strong> +91-8448211202</p>
+                        <h2>4. Minimum Order Quantity (MOQ) &amp; Packaging</h2>
+                        <p>All supply is strictly B2B wholesale (starting from trial bulk quantities of 200 kg–500 kg up to full truck loads). Standard bulk packaging is provided in 5 kg, 10 kg, 25 kg, or 50 kg inner-lined PP/HDPE bags, unless custom neutral or private-label packing is mutually agreed upon in writing.</p>
+
+                        <h2>5. Taxes, Billing &amp; Payment Terms</h2>
+                        <p>Applicable GST (Goods and Services Tax) is charged as per prevailing Indian government slabs on all commercial invoices. Buyers must provide accurate GSTIN and consignee details prior to billing so that GST Invoices and E-Way bills can be generated without errors. Payment terms (advance, against LR/bilty, or mutually agreed credit terms for regular buyers) are finalized per order confirmation.</p>
+
+                        <h2>6. Culinary &amp; Informational Disclaimer</h2>
+                        <p>Product descriptions, buying guides, and trade notes published on this website (including references to ASTA colour, SHU heat, or curcumin percentage) are provided for general commercial and culinary guidance. Buyers with specific laboratory certification requirements should specify them before placing a purchase order.</p>
+
+                        <h2>7. Intellectual Property</h2>
+                        <p>All content, logo assets, product specification tables, and original trade guides published on this website belong to <strong>AMSB GLOBAL</strong> and may not be copied or redistributed for commercial use without prior written permission.</p>
+
+                        <h2>8. Governing Law &amp; Jurisdiction</h2>
+                        <p>All commercial transactions, contracts, and disputes arising out of business dealings with AMSB GLOBAL shall be governed by the laws of India and subject exclusively to the jurisdiction of the competent courts in <strong>Morbi, Gujarat</strong>.</p>
+
+                        <h2>9. Official Trade Contact</h2>
+                        <div class="policy-contact-box">
+                            <h4><i class="fa-solid fa-building"></i> AMSB GLOBAL</h4>
+                            <p><strong>Contact Person:</strong> <?= e($brand['founder']) ?></p>
+                            <p><strong>Address:</strong> Wankaner, Morbi, Gujarat - 363621, India</p>
+                            <p><strong>Phone / WhatsApp:</strong> <a href="tel:+<?= e($tel) ?>"><?= e($disp_phone) ?></a></p>
+                            <p><strong>Email:</strong> <a href="mailto:<?= e($mail) ?>"><?= e($mail) ?></a></p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </article>
 
-            <!-- RIGHT COLUMN: Sidebar Widgets -->
-            <div class="col-lg-4">
-                <div class="sidebar-widgets position-sticky" style="top: 20px;">
-                    <div class="widget-box bg-white p-4 rounded shadow-sm border mb-4">
-                        <h5 class="fw-bold mb-3 border-bottom pb-2">Search Products</h5>
-                        <form action="products.php" method="GET" class="d-flex">
-                            <input type="text" name="search" class="form-control me-2" placeholder="Search..." required style="font-size: 0.9rem;">
-                            <button type="submit" class="btn text-white px-3" style="background: var(--primary-green, #2b5e2c);"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        </form>
+            <!-- Right Sticky Sidebar -->
+            <aside class="bd-sidebar">
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-scale-balanced"></i> Legal &amp; Trade Policies</h4>
+                    <ul class="policy-nav">
+                        <li><a href="privacy-policy.php"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a></li>
+                        <li><a href="refund-policy.php"><i class="fa-solid fa-rotate-left"></i> Refund &amp; Cancellation</a></li>
+                        <li><a href="shipping-policy.php"><i class="fa-solid fa-truck-fast"></i> Shipping &amp; Dispatch</a></li>
+                        <li><a href="terms-and-conditions.php" class="active"><i class="fa-solid fa-file-contract"></i> Terms &amp; Conditions</a></li>
+                    </ul>
+                </div>
+
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-magnifying-glass"></i> Search Spices</h4>
+                    <form action="products.php" method="GET" class="sb-search-form">
+                        <input type="search" name="q" placeholder="Search chilli, turmeric..." required>
+                        <button type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form>
+                </div>
+
+                <?php if (!empty($nav_cats)): ?>
+                <div class="sb-card">
+                    <h4><i class="fa-solid fa-layer-group"></i> Wholesale Categories</h4>
+                    <ul class="sb-cat-list">
+                        <?php foreach ($nav_cats as $cslug => $cd): ?>
+                        <li>
+                            <a href="category.php?slug=<?= urlencode($cslug) ?>">
+                                <span><?= e($cd['name']) ?></span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <?php endif; ?>
+
+                <div class="pd-desk-card">
+                    <div class="pdd-top">
+                        <div class="pdd-ico"><i class="fa-solid fa-handshake"></i></div>
+                        <div>
+                            <small>Wholesale Inquiries</small>
+                            <h4><?= e($brand['founder']) ?></h4>
+                            <span>AMSB GLOBAL • Wankaner, Morbi</span>
+                        </div>
                     </div>
-
-                    <div class="widget-box bg-white p-4 rounded shadow-sm border mb-4">
-                        <h5 class="fw-bold mb-3 border-bottom pb-2">Categories</h5>
-                        <ul class="list-unstyled mb-0 category-list">
-                            <?php
-                            $catQuery = mysqli_query($conn, "SELECT * FROM categories WHERE status = 1");
-                            if ($catQuery && mysqli_num_rows($catQuery) > 0) {
-                                while($catRow = mysqli_fetch_assoc($catQuery)) {
-                            ?>
-                            <li class="mb-2 pb-2 border-bottom">
-                                <a href="category.php?slug=<?= htmlspecialchars($catRow['slug_url']) ?>" class="text-decoration-none d-flex justify-content-between align-items-center text-muted" style="font-size: 0.95rem;">
-                                    <span><i class="fa-solid fa-angle-right me-2" style="font-size: 0.75rem;"></i> <?= htmlspecialchars($catRow['categories']) ?></span>
-                                </a>
-                            </li>
-                            <?php 
-                                }
-                            }
-                            ?>
-                        </ul>
-                    </div>
-
-                    <div class="widget-box rounded shadow-sm text-center p-4 text-white" style="background: linear-gradient(135deg, var(--primary-green, #2b5e2c) 0%, #1a3f1b 100%);">
-                        <div class="icon-wrap mb-3"><i class="fa-solid fa-headset fs-1 text-white opacity-75"></i></div>
-                        <h4 class="fw-bold mb-2 text-white">Wholesale Inquiries</h4>
-                        <p class="small mb-4 opacity-75">Get in touch for bulk orders and export pricing.</p>
-                        <a href="contact.php" class="btn bg-white w-100 fw-bold shadow-sm mb-3" style="color: var(--primary-green, #2b5e2c);">Request Quote</a>
-                        <a href="tel:+918448211202" class="text-white text-decoration-none small fw-bold"><i class="fa-solid fa-phone me-1"></i> +91-8448211202</a>
+                    <p>Ready to start with a courier sample or request today’s bulk wholesale quotation?</p>
+                    <div class="pdd-links">
+                        <a href="contact.php"><i class="fa-solid fa-file-invoice-dollar"></i> Request Bulk Quote</a>
+                        <a href="tel:+<?= e($tel) ?>"><i class="fa-solid fa-phone"></i> <?= e($disp_phone) ?></a>
                     </div>
                 </div>
-            </div>
+            </aside>
 
         </div>
-    </div>
-</section>
+    </section>
 
-<?php 
-include ('includes/inquiry-form.php');
-include 'includes/footer.php'; 
-?>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tg = document.querySelector('.tg');
+    const nav = document.getElementById('nav');
+    if (tg && nav && !tg.dataset.bound) {
+        tg.dataset.bound = '1';
+        tg.addEventListener('click', () => {
+            const exp = tg.getAttribute('aria-expanded') === 'true';
+            tg.setAttribute('aria-expanded', String(!exp));
+            nav.classList.toggle('open');
+        });
+    }
+});
+</script>
+
+<?php include 'includes/footer.php'; ?>
