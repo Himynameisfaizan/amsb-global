@@ -109,8 +109,8 @@ include_once 'includes/header.php';
                     <ul class="policy-nav">
                         <li><a href="privacy-policy.php"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a></li>
                         <li><a href="refund-policy.php"><i class="fa-solid fa-rotate-left"></i> Refund &amp; Cancellation</a></li>
-                        <li><a href="shipping-policy.php"><i class="fa-solid fa-truck-fast"></i> Shipping &amp; Dispatch</a></li>
-                        <li><a href="terms-and-conditions.php" class="active"><i class="fa-solid fa-file-contract"></i> Terms &amp; Conditions</a></li>
+                        <li><a href="shipping-return.php"><i class="fa-solid fa-truck-fast"></i> Shipping &amp; Dispatch</a></li>
+                        <li><a href="terms-condition.php" class="active"><i class="fa-solid fa-file-contract"></i> Terms &amp; Conditions</a></li>
                     </ul>
                 </div>
 
