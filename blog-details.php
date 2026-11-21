@@ -81,7 +81,7 @@ if ($blog) {
                     '@id' => $canonical_url . '#breadcrumb',
                     'itemListElement' => [
                         ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => $base_bd],
-                        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Trade Insights', 'item' => $base_bd . 'blog.php'],
+                        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Trade Insights', 'item' => $base_bd . 'blogs.php'],
                         ['@type' => 'ListItem', 'position' => 3, 'name' => $b_title, 'item' => $canonical_url]
                     ]
                 ]
@@ -93,11 +93,26 @@ if ($blog) {
     http_response_code(404);
     $meta_title    = 'Article Not Found | AMSB GLOBAL';
     $meta_desc     = 'Requested trade guide could not be found. Browse all wholesale spice buying guides from AMSB GLOBAL.';
-    $canonical_url = $base_bd . 'blog.php';
+    $canonical_url = $base_bd . 'blogs.php';
 }
 
 include_once 'includes/header.php';
 ?>
+
+<style>
+    /* --- Fix: Long Blog Content & Reveal Visibility --- */
+.bd-content-card,
+.bd-content-card[data-reveal],
+.bd-featured-img[data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* Sticky sidebar + long page smooth scrolling fix */
+body {
+    overflow-x: clip;
+}
+</style>
 
 <!-- Reading Progress Indicator -->
 <div class="read-progress" id="readProgress" aria-hidden="true"></div>
@@ -112,7 +127,7 @@ include_once 'includes/header.php';
                 <h2>Trade Guide Not Found</h2>
                 <p>The article you are looking for may have been moved or updated. Explore all our wholesale spice guides or connect directly with our Wankaner trade desk.</p>
                 <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px;">
-                    <a href="blog.php" class="btn">All Trade Insights</a>
+                    <a href="blogs.php" class="btn">All Trade Insights</a>
                     <a href="products.php" class="btn o d">Browse Spices</a>
                 </div>
             </div>
@@ -151,7 +166,7 @@ include_once 'includes/header.php';
             <nav class="bc" aria-label="Breadcrumb">
                 <a href="./"><i class="fa-solid fa-house"></i> Home</a>
                 <span>/</span>
-                <a href="blog.php">Trade Insights</a>
+                <a href="blogs.php">Trade Insights</a>
                 <span>/</span>
                 <span class="curr"><?= e(mb_strimwidth($b_title, 0, 55, '...')) ?></span>
             </nav>
@@ -318,7 +333,7 @@ include_once 'includes/header.php';
                     <span class="hi">Keep Reading</span>
                     <h2>More Wholesale Buying Guides</h2>
                 </div>
-                <a href="blog.php" class="btn o d">View All Guides</a>
+                <a href="blogs.php" class="btn o d">View All Guides</a>
             </div>
             <div class="blog-grid">
                 <?php foreach (array_slice($recent_posts, 0, 3) as $rb):
@@ -356,13 +371,16 @@ include_once 'includes/header.php';
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     // 1. Scroll Reveal
-    const revealEls = document.querySelectorAll('[data-reveal]');
+const revealEls = document.querySelectorAll('[data-reveal]');
     if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver((entries, obs) => {
             entries.forEach(en => {
-                if (en.isIntersecting) { en.target.classList.add('is-visible'); obs.unobserve(en.target); }
+                if (en.isIntersecting) {
+                    en.target.classList.add('is-visible');
+                    obs.unobserve(en.target);
+                }
             });
-        }, { threshold: 0.08, rootMargin: '0px 0px -25px 0px' });
+        }, { threshold: 0, rootMargin: '0px 0px -10px 0px' });
         revealEls.forEach(el => io.observe(el));
     } else {
         revealEls.forEach(el => el.classList.add('is-visible'));

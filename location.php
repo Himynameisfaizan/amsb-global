@@ -1,382 +1,273 @@
 <?php
-$pageTitle = 'Locations & Custom Pages | Bhagirath Enterprises';
-$meta_title = 'Locations & Custom Pages | Bhagirath Enterprises';
-$meta_desc = 'Explore location and information pages published by Bhagirath Enterprises.';
-$meta_key = 'Bhagirath Enterprises, locations, custom pages';
-$breadcrumb_title = 'Locations';
+if (session_status() === PHP_SESSION_NONE) session_start();
+include_once 'config/connect.php';
 
-// Adjust this path if your database connection file is in a different folder.
-include 'config/connect.php';
+$https_l = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? '') == 443);
+$base_l  = ($https_l ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . rtrim(dirname($_SERVER['PHP_SELF']), '/\\') . '/';
+$loc_url = $base_l . basename($_SERVER['PHP_SELF']);
 
-// Fetch active custom pages using the schema in custom_pages.sql.
-$customPages = [];
-$sql = "SELECT page_title, breadcrumb_title, slug_url, meta_title, meta_desc
-        FROM custom_pages
-        WHERE status = 1 AND slug_url <> ''
-        ORDER BY id DESC";
-$result = mysqli_query($conn, $sql);
-
-if ($result) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $customPages[] = $row;
-    }
-}
-
-function locationPageText($value): string
+$page_meta = [
+    'title' => 'Supply Locations & Trade Pages | Wholesale Spice Supplier | AMSB GLOBAL',
+    'desc'  => 'Explore all Pan-India supply locations and wholesale trade information pages by AMSB GLOBAL (Wankaner, Morbi, Gujarat). Bulk Red Chilli Powder & Turmeric Powder supply with GST billing.',
+    'key'   => 'AMSB Global supply locations, bulk red chilli powder supplier India, turmeric powder wholesale cities, Wankaner Morbi spice trader',
+    'schema' => '<script type="application/ld+json">
 {
-    return htmlspecialchars((string)($value ?? ''), ENT_QUOTES, 'UTF-8');
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "' . $loc_url . '#collectionpage",
+      "url": "' . $loc_url . '",
+      "name": "AMSB GLOBAL Supply Locations & Wholesale Trade Pages",
+      "description": "Directory of location-focused wholesale spice supply pages published by AMSB GLOBAL, Wankaner, Morbi, Gujarat.",
+      "inLanguage": "en-IN",
+      "isPartOf": { "@id": "' . $base_l . '#website" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "' . $loc_url . '#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "' . $base_l . '" },
+        { "@type": "ListItem", "position": 2, "name": "Locations", "item": "' . $loc_url . '" }
+      ]
+    }
+  ]
 }
+</script>'
+];
 
-// Use the existing shared site header (it should output the opening HTML/head/body).
-include 'includes/header.php';
+include_once 'includes/header.php';
+
+// ---- Fetch Active Custom Pages (Dynamic from custom_pages table) ----
+$customPages = q("SELECT id, page_title, breadcrumb_title, slug_url, meta_title, meta_desc
+                  FROM custom_pages
+                  WHERE status = 1 AND slug_url <> ''
+                  ORDER BY id DESC");
 ?>
 
-<style>
-:root {
-    --location-maroon: #711b3c;
-    --location-pink: #df6e97;
-    --location-ink: #171717;
-    --location-muted: #6b7280;
-    --location-bg: #f5f6f8;
-}
+<main id="main" class="location-page">
 
-body.location-page {
-    margin: 0;
-    background: var(--location-bg);
-    color: #252525;
-    font-family: "Inter", Arial, sans-serif;
-}
+    <!-- 1. SOFT LIGHT BLUE LOCATION HERO -->
+    <section class="page-hero">
+        <div class="wrap ph-grid">
+            <div class="ph-content" data-reveal>
+                <nav class="bc" aria-label="Breadcrumb">
+                    <a href="./"><i class="fa-solid fa-house"></i> Home</a>
+                    <span>/</span>
+                    <span class="curr">Supply Locations &amp; Pages</span>
+                </nav>
+                <div class="hero-badges">
+                    <span class="pill-primary"><i class="fa-solid fa-map-location-dot"></i> <?= count($customPages) ?> Active Trade Pages</span>
+                    <span class="pill-secondary"><i class="fa-solid fa-truck-fast"></i> Pan-India Dispatch From Gujarat</span>
+                </div>
+                <h1>Pan-India <span class="txt-primary">Supply Locations</span> &amp; <span class="txt-secondary">Trade Pages.</span></h1>
+                <p class="lead">Browse all city-specific wholesale supply pages and trade guides published by <strong>AMSB GLOBAL</strong>. From our Wankaner, Morbi processing hub, we supply pure Red Chilli Powder and Turmeric Powder in bulk across major Indian mandis.</p>
 
-.location-hero {
-    position: relative;
-    overflow: hidden;
-    padding: 62px 0 58px;
-    color: #fff;
-    text-align: center;
-    background:
-        linear-gradient(115deg, rgba(30, 10, 19, .92), rgba(113, 27, 60, .82)),
-        url("assets/images/banner/banner-bg.jpg") center/cover no-repeat,
-        #711b3c;
-}
+                <div class="blog-hero-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="search" id="locSearch" placeholder="Search city, state, or spice page..." aria-label="Search locations and custom pages">
+                </div>
+            </div>
 
-.location-hero::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0;
-    height: 4px;
-    background: var(--location-pink);
-}
+            <!-- Right Dispatch Network Snapshot -->
+            <div class="ph-card" data-reveal>
+                <div class="phc-head">
+                    <span>Pan-India Wholesale Logistics</span>
+                    <h3>AMSB GLOBAL Dispatch Hub</h3>
+                </div>
+                <ul class="phc-list">
+                    <li><span><i class="fa-solid fa-location-dot"></i> Dispatch Origin</span><strong>Wankaner, Morbi, Gujarat - 363621</strong></li>
+                    <li><span><i class="fa-solid fa-pepper-hot"></i> Core Supply</span><strong>Red Chilli &amp; Turmeric Powder</strong></li>
+                    <li><span><i class="fa-solid fa-boxes-packing"></i> Bulk Packing</span><strong>5 / 10 / 25 / 50 KG Lined PP Bags</strong></li>
+                    <li><span><i class="fa-solid fa-truck"></i> Transport Mode</span><strong>Part Load &amp; Full Truck (10–25 MT)</strong></li>
+                    <li><span><i class="fa-solid fa-file-invoice"></i> Tax Paperwork</span><strong>100% GST Invoice &amp; E-Way Bill</strong></li>
+                    <li><span><i class="fa-solid fa-phone-volume"></i> Trade Desk</span><strong><?= e($disp_phone) ?> (<?= e($brand['founder']) ?>)</strong></li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
-.location-hero .eyebrow {
-    display: inline-block;
-    margin-bottom: 12px;
-    padding: 6px 13px;
-    border: 1px solid rgba(255, 255, 255, .28);
-    border-radius: 30px;
-    color: #fff;
-    font-size: .78rem;
-    font-weight: 700;
-    letter-spacing: 1.3px;
-    text-transform: uppercase;
-}
-
-.location-hero h1 {
-    margin: 0 0 12px;
-    font-size: clamp(1.8rem, 3vw, 2.65rem);
-    font-weight: 800;
-    line-height: 1.2;
-}
-
-.location-hero p {
-    max-width: 680px;
-    margin: 0 auto;
-    color: rgba(255, 255, 255, .84);
-    line-height: 1.7;
-}
-
-.location-breadcrumb-wrap {
-    background: #fff;
-    border-bottom: 1px solid #ececf0;
-}
-
-.location-breadcrumb {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 9px;
-    margin: 0;
-    padding: 14px 0;
-    list-style: none;
-    color: var(--location-muted);
-    font-size: .9rem;
-}
-
-.location-breadcrumb a {
-    color: var(--location-maroon);
-    text-decoration: none;
-}
-
-.location-breadcrumb a:hover {
-    text-decoration: underline;
-}
-
-.location-section {
-    padding: 54px 0 70px;
-}
-
-.location-section-heading {
-    max-width: 720px;
-    margin: 0 auto 32px;
-    text-align: center;
-}
-
-.location-section-heading .small-label {
-    color: var(--location-maroon);
-    font-size: .78rem;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-}
-
-.location-section-heading h2 {
-    margin: 9px 0 12px;
-    color: #202020;
-    font-size: clamp(1.55rem, 2.4vw, 2.1rem);
-    font-weight: 800;
-}
-
-.location-section-heading p {
-    margin: 0;
-    color: var(--location-muted);
-    line-height: 1.75;
-}
-
-.location-card {
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-    padding: 25px;
-    border: 1px solid #ececf0;
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: 0 5px 22px rgba(25, 25, 25, .045);
-    transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
-}
-
-.location-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(113, 27, 60, .28);
-    box-shadow: 0 14px 32px rgba(25, 25, 25, .10);
-}
-
-.location-card-top {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 17px;
-}
-
-.location-card-icon {
-    display: inline-flex;
-    width: 46px;
-    height: 46px;
-    flex: 0 0 46px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    background: rgba(113, 27, 60, .09);
-    color: var(--location-maroon);
-    font-size: 1.25rem;
-}
-
-.location-card h3 {
-    margin: 1px 0 0;
-    color: #202020;
-    font-size: 1.12rem;
-    font-weight: 750;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
-}
-
-.location-card p {
-    display: -webkit-box;
-    overflow: hidden;
-    margin: 0 0 22px;
-    color: var(--location-muted);
-    font-size: .94rem;
-    line-height: 1.75;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-}
-
-.location-card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-top: auto;
-    padding-top: 17px;
-    border-top: 1px solid #f0f0f2;
-}
-
-.location-card-label {
-    color: #858585;
-    font-size: .78rem;
-}
-
-.location-card-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 42px;
-    padding: 10px 16px;
-    border: 0;
-    border-radius: 7px;
-    background: var(--location-maroon);
-    color: #fff;
-    font-size: .88rem;
-    font-weight: 700;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: background .2s ease, transform .2s ease;
-}
-
-.location-card-button:hover {
-    transform: translateY(-1px);
-    background: #55132d;
-    color: #fff;
-}
-
-.location-empty {
-    padding: 42px 24px;
-    border: 1px dashed #d5d5db;
-    border-radius: 14px;
-    background: #fff;
-    text-align: center;
-}
-
-.location-empty h3 {
-    margin-bottom: 10px;
-    font-size: 1.25rem;
-    font-weight: 750;
-}
-
-.location-empty p {
-    margin: 0;
-    color: var(--location-muted);
-}
-
-@media (max-width: 575.98px) {
-    .location-hero {
-        padding: 45px 0 42px;
-    }
-
-    .location-section {
-        padding: 38px 0 48px;
-    }
-
-    .location-card {
-        padding: 20px;
-    }
-
-    .location-card-footer {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .location-card-button {
-        width: 100%;
-    }
-}
-</style>
-
-<header class="location-hero">
-    <div class="container">
-        <span class="eyebrow">Bhagirath Enterprises</span>
-        <h1>Explore Our Pages</h1>
-        <p>Discover our location-focused pages, services and useful information for wholesale and commercial
-            requirements.</p>
-    </div>
-</header>
-
-<div class="location-breadcrumb-wrap">
-    <div class="container">
-        <nav aria-label="Breadcrumb">
-            <ol class="location-breadcrumb">
-                <li><a href="index.php">Home</a></li>
-                <li aria-hidden="true">›</li>
-                <li aria-current="page">Locations</li>
-            </ol>
-        </nav>
-    </div>
-</div>
-
-<main>
-    <section class="location-section">
-        <div class="container">
-            <div class="location-section-heading">
-                <span class="small-label">Find a Page</span>
-                <h2>Our Locations &amp; Information Pages</h2>
-                <p>Browse the pages published by Bhagirath Enterprises. Select a page to open its complete details in a
-                    new tab.</p>
+    <!-- 2. DYNAMIC CUSTOM PAGES CARD GRID -->
+    <section class="sec" id="locations-list">
+        <div class="wrap">
+            <div class="cat-list-head" data-reveal>
+                <div>
+                    <span class="hi">Explore Our Network</span>
+                    <h2>All Published Locations &amp; Trade Pages</h2>
+                </div>
+                <p class="count-note">Showing <strong id="locVisibleCount"><?= count($customPages) ?></strong> page<?= count($customPages) === 1 ? '' : 's' ?></p>
             </div>
 
             <?php if (!empty($customPages)): ?>
-            <div class="row g-4">
-                <?php foreach ($customPages as $customPage):
-                        $cardTitle = trim((string)($customPage['breadcrumb_title'] ?? ''));
-                        if ($cardTitle === '') {
-                            $cardTitle = trim((string)($customPage['page_title'] ?? ''));
-                        }
-                        if ($cardTitle === '') {
-                            $cardTitle = 'Explore Page';
-                        }
+            <div class="loc-grid" id="locGrid">
+                <?php foreach ($customPages as $idx => $cp):
+                    $cardTitle = trim((string)($cp['breadcrumb_title'] ?? ''));
+                    if ($cardTitle === '') $cardTitle = trim((string)($cp['page_title'] ?? ''));
+                    if ($cardTitle === '') $cardTitle = 'Wholesale Spice Supply';
 
-                        $description = trim(strip_tags((string)($customPage['meta_desc'] ?? '')));
-                        if ($description === '') {
-                            $description = 'Explore details and information from Bhagirath Enterprises.';
-                        }
+                    $fullTitle = trim((string)($cp['page_title'] ?? '')) ?: $cardTitle;
+                    $desc = txt($cp['meta_desc'] ?? '', 155);
+                    if ($desc === '') {
+                        $desc = 'Direct bulk wholesale supply of 100% pure Red Chilli Powder and Turmeric Powder from AMSB GLOBAL, Wankaner (Morbi) with GST invoice & E-Way bill.';
+                    }
 
-                        $slug = trim((string)($customPage['slug_url'] ?? ''));
-                        $pageUrl = 'page.php?slug=' . rawurlencode($slug);
-                    ?>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <article class="location-card">
-                        <div class="location-card-top">
-                            <div class="location-card-icon" aria-hidden="true">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
-                                    <path d="M14 3v6h6M8 13h8M8 17h8" />
-                                </svg>
-                            </div>
-                            <h3><?= locationPageText($cardTitle); ?></h3>
+                    $slug = trim((string)($cp['slug_url'] ?? ''));
+                    $pageUrl = 'page.php?slug=' . rawurlencode($slug);
+                    $accentClass = ($idx % 2 === 0) ? 'loc-gold' : 'loc-cyan';
+                ?>
+                <article class="loc-card <?= $accentClass ?>" data-search="<?= e(strtolower($cardTitle . ' ' . $fullTitle . ' ' . $desc)) ?>" data-reveal>
+                    <div class="loc-card-top">
+                        <div class="loc-ico" aria-hidden="true">
+                            <i class="fa-solid fa-location-dot"></i>
                         </div>
+                        <span class="loc-tag">Wholesale Supply</span>
+                    </div>
 
-                        <p><?= locationPageText($description); ?></p>
+                    <h3><a href="<?= e($pageUrl) ?>"><?= e($cardTitle) ?></a></h3>
+                    <p><?= e($desc) ?></p>
 
-                        <div class="location-card-footer">
-                            <span class="location-card-label">Bhagirath Enterprises</span>
-                            <a class="location-card-button" href="<?= locationPageText($pageUrl); ?>" target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label="Open <?= locationPageText($cardTitle); ?> in a new tab">
-                                View Page
-                                <span aria-hidden="true">↗</span>
-                            </a>
-                        </div>
-                    </article>
-                </div>
+                    <div class="loc-meta-pills">
+                        <span><i class="fa-solid fa-check"></i> Pure Grade</span>
+                        <span><i class="fa-solid fa-box"></i> 5–50 KG Bulk</span>
+                    </div>
+
+                    <div class="loc-card-foot">
+                        <span class="loc-brand"><i class="fa-solid fa-shield-halved"></i> AMSB GLOBAL</span>
+                        <a class="loc-btn" href="<?= e($pageUrl) ?>">
+                            View Details <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
                 <?php endforeach; ?>
             </div>
+
+            <div class="empty-box" id="locNoMatch" style="display:none;margin-top:24px;">
+                <i class="fa-solid fa-map-pin"></i>
+                <h3>No matching location page found</h3>
+                <p>Even if your city isn’t listed above, we dispatch daily via road transport across India. Message Mahir Bhai directly for rates to your city.</p>
+                <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                    <button type="button" class="btn" id="resetLocBtn">Show All Pages</button>
+                    <a href="contact.php" class="btn o d">Ask Rate for Your City</a>
+                </div>
+            </div>
+
             <?php else: ?>
-            <div class="location-empty">
-                <h3>No pages available yet</h3>
-                <p>Published custom pages will appear here automatically.</p>
+            <div class="empty-box" data-reveal>
+                <i class="fa-solid fa-map-location-dot"></i>
+                <h3>Location Pages Coming Soon</h3>
+                <p>Published location and trade information pages will appear here automatically. Meanwhile, contact our Wankaner trade desk for bulk spice delivery to your city.</p>
+                <a href="contact.php" class="btn">Request Bulk Rate</a>
             </div>
             <?php endif; ?>
         </div>
     </section>
+
+    <!-- 3. BUYER TRUST BAND -->
+    <section class="sec alt">
+        <div class="wrap">
+            <div class="sh center" data-reveal>
+                <span class="hi">Reliable Interstate Wholesale Supply</span>
+                <h2>Why Buyers Across India Source From Wankaner, Morbi</h2>
+                <p>Consistent quality, clean paperwork, and transparent daily market rates on every lot we dispatch.</p>
+            </div>
+            <div class="trust-4-grid">
+                <div class="t4-card" data-reveal>
+                    <div class="t4-ico gold-ico"><i class="fa-solid fa-vial-circle-check"></i></div>
+                    <h3>Sample Before Bulk Order</h3>
+                    <p>Receive courier samples of our Red Chilli &amp; Turmeric grades in 24–48 hours before booking bulk stock.</p>
+                </div>
+                <div class="t4-card" data-reveal>
+                    <div class="t4-ico cyan-ico"><i class="fa-solid fa-ban"></i></div>
+                    <h3>100% Pure, Zero Mixing</h3>
+                    <p>Strictly free from artificial dyes, Sudan colour, lead chromate, or starch fillers.</p>
+                </div>
+                <div class="t4-card" data-reveal>
+                    <div class="t4-ico navy-ico"><i class="fa-solid fa-file-invoice"></i></div>
+                    <h3>GST &amp; E-Way Bill Ready</h3>
+                    <p>Smooth interstate road transport with proper GST tax invoice, E-Way bill, and LR slip.</p>
+                </div>
+                <div class="t4-card" data-reveal>
+                    <div class="t4-ico gold-ico"><i class="fa-solid fa-user-tie"></i></div>
+                    <h3>Direct Founder Desk</h3>
+                    <p>Talk directly to <?= e($brand['founder']) ?> for rates, lot photos, and live loading confirmation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. DIRECT TRADE CTA -->
+    <section class="sec ab-cta-sec" style="padding-top:60px;">
+        <div class="wrap">
+            <div class="ab-cta-box" data-reveal>
+                <div>
+                    <span class="cta-tag">Looking for Delivery to Your City?</span>
+                    <h2>Get Today’s Bulk Rate With Transport to Your Mandi</h2>
+                    <p>Share your city, required quantity (200 kg to full truck load), and spice grade. Our Wankaner trade desk will reply promptly.</p>
+                </div>
+                <div class="cta-btns">
+                    <a href="contact.php" class="btn"><i class="fa-solid fa-paper-plane"></i> Request Bulk Quote</a>
+                    <a href="https://wa.me/<?= e($wa) ?>?text=<?= urlencode('Hello Mahir Bhai (AMSB GLOBAL), I want today’s bulk wholesale spice rate with transport to my city.') ?>" target="_blank" rel="noopener" class="btn wa-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp <?= e($disp_phone) ?></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // 1. Scroll Reveal (threshold: 0 so tall blocks never stay hidden)
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries, obs) => {
+            entries.forEach(en => {
+                if (en.isIntersecting) { en.target.classList.add('is-visible'); obs.unobserve(en.target); }
+            });
+        }, { threshold: 0, rootMargin: '0px 0px -10px 0px' });
+        revealEls.forEach(el => io.observe(el));
+    } else {
+        revealEls.forEach(el => el.classList.add('is-visible'));
+    }
+
+    // 2. Live Location Search
+    const searchInput = document.getElementById('locSearch');
+    const cards       = document.querySelectorAll('#locGrid .loc-card');
+    const countEl     = document.getElementById('locVisibleCount');
+    const noMatchBox  = document.getElementById('locNoMatch');
+    const resetBtn    = document.getElementById('resetLocBtn');
+
+    function filterLocations() {
+        const q = (searchInput ? searchInput.value : '').trim().toLowerCase();
+        let visible = 0;
+        cards.forEach(card => {
+            const match = q === '' || (card.dataset.search || '').includes(q);
+            card.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        if (countEl) countEl.textContent = visible;
+        if (noMatchBox) noMatchBox.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    if (searchInput) searchInput.addEventListener('input', filterLocations);
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            if (searchInput) searchInput.value = '';
+            filterLocations();
+        });
+    }
+
+    // 3. Mobile Menu Toggle
+    const tg = document.querySelector('.tg');
+    const nav = document.getElementById('nav');
+    if (tg && nav && !tg.dataset.bound) {
+        tg.dataset.bound = '1';
+        tg.addEventListener('click', () => {
+            const exp = tg.getAttribute('aria-expanded') === 'true';
+            tg.setAttribute('aria-expanded', String(!exp));
+            nav.classList.toggle('open');
+        });
+    }
+});
+</script>
 
 <?php include 'includes/footer.php'; ?>
