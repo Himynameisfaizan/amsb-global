@@ -1,5 +1,5 @@
 <?php
-/** Global header: DB connect, helpers, SEO engine, navigation - AMSB GLOBAL */
+/** Global header: DB connect, helpers, Auto SEO + Schema + Canonical engine - AMSB GLOBAL */
 if (session_status() === PHP_SESSION_NONE) session_start();
 include 'config/connect.php';
 if (is_file(__DIR__ . '/../config/site.php')) {
@@ -7,18 +7,18 @@ if (is_file(__DIR__ . '/../config/site.php')) {
 }
 $ok = isset($conn) && !$conn->connect_error;
 
-// ---- Brand Configuration Override for AMSB GLOBAL ----
+// ---- Brand Configuration for AMSB GLOBAL (B2B Wholesale Trade) ----
 $brand = [
-    'name'    => 'AMSB GLOBAL',
-    'suffix'  => 'Spice Manufacturers & Bulk Exporters',
-    'founder' => 'Mahir Bhai',
-    'city'    => 'Wankaner, Morbi (Gujarat)',
-    'address' => 'Wankaner, Morbi, Gujarat - 363621, India',
-    'phone'   => '8200778206',
-    'email'   => 'amsbglobal@gmail.com',
-    'hours'   => 'Mon - Sat: 9:00 AM - 8:00 PM IST',
-    'licences'=> ['FSSAI Certified', 'ISO 9001:2015', 'Export House'],
-    'wa_msg'  => 'Hello Mahir Bhai (AMSB GLOBAL), I want to enquire about bulk spices.'
+    'name'     => 'AMSB GLOBAL',
+    'suffix'   => 'Wholesale Spice Traders & Suppliers',
+    'founder'  => 'Mahir Bhai',
+    'city'     => 'Wankaner, Morbi (Gujarat)',
+    'address'  => 'Wankaner, Morbi, Gujarat - 363621, India',
+    'phone'    => '8200778206',
+    'email'    => 'amsbglobal@gmail.com',
+    'hours'    => 'Mon - Sat: 9:00 AM - 8:00 PM IST',
+    'licences' => ['100% Pure Spices', 'GST Registered', 'Pan-India Supply'],
+    'wa_msg'   => 'Hello Mahir Bhai (AMSB GLOBAL), I want to enquire about wholesale Red Chilli Powder and Turmeric Powder rates.'
 ];
 
 // ---- Helpers ----
@@ -40,11 +40,9 @@ function img($f, $d, $fb) {
         if (is_file($root . $p)) return $base . $p;
     return $fb;
 }
-
-// Updated fallback mark to match AMSB Logo Colors (Deep Slate background with Gold and Cyan highlights)
 function mark($w = 42) {
     return '<svg viewBox="0 0 52 52" width="' . $w . '" height="' . $w . '" aria-hidden="true">
-        <rect x="2" y="2" width="48" height="48" rx="12" fill="#0F172A" stroke="#C89B3C" stroke-width="2"/>
+        <rect x="2" y="2" width="48" height="48" rx="12" fill="#081225" stroke="#C89B3C" stroke-width="2"/>
         <path d="M15 36C15 23 23 14 38 13C37 27 29 36 17 37C16 37 15.5 36.5 15 36Z" fill="#C89B3C"/>
         <path d="M20 38C25 30 31 24 39 20C37 31 30 38 20 38Z" fill="#2BB3D6"/>
         <circle cx="35" cy="17" r="2.5" fill="#FFFFFF"/>
@@ -62,6 +60,10 @@ $ct = array_merge([
     'facebook' => '', 'instagram' => '', 'twitter' => '', 'linkdin' => ''
 ], array_filter($db_ct));
 
+if (stripos($ct['email'], 'bharat') !== false || stripos($ct['email'], 'example') !== false) $ct['email'] = $brand['email'];
+if (strpos($ct['phone'], '99240') !== false || strpos($ct['phone'], '98000') !== false) { $ct['phone'] = $brand['phone']; $ct['wp_number'] = $brand['phone']; }
+if (stripos($ct['address'], 'Ambaliyasan') !== false || empty($ct['address'])) $ct['address'] = $brand['address'];
+
 $digits = function ($s) { $d = preg_replace('/\D/', '', (string)$s); return strlen($d) === 10 ? '91' . $d : $d; };
 $mail = $ct['email'] ?: $brand['email'];
 $tel  = $digits($ct['phone']) ?: '918200778206';
@@ -78,32 +80,63 @@ foreach (q("SELECT cate_id, categories AS category_name, slug_url AS slug FROM c
     $nav_cats[$c['slug']] = ['name' => $c['category_name'], 'subs' => $subs];
 }
 
-// ---- SEO ----
-$current_page_name = basename($_SERVER['PHP_SELF']);
-if (empty($meta_title)) {
-    $meta_title = 'AMSB GLOBAL | Red Chilli Powder & Turmeric Powder Manufacturer & Exporter in Morbi, Gujarat';
-    $meta_desc  = 'AMSB GLOBAL is a trusted B2B manufacturer, wholesaler and exporter of pure Red Chilli Powder, Turmeric Powder and Indian Spices in bulk.';
-    $meta_key   = 'Red Chilli Powder Exporter Gujarat, Turmeric Powder Wholesale Morbi, AMSB Global Wankaner';
-    $schema     = '';
-    if ($ok) {
-        $pg = $conn->real_escape_string($current_page_name);
-        $md = q("SELECT meta_title, meta_desc, meta_key FROM meta WHERE page_url='$pg' LIMIT 1")[0] ?? [];
-        $meta_title = ($md['meta_title'] ?? '') ?: $meta_title;
-        $meta_desc  = ($md['meta_desc'] ?? '') ?: $meta_desc;
-        $meta_key   = ($md['meta_key'] ?? '') ?: $meta_key;
-        $schema     = q("SELECT schema_markup FROM page_schemas WHERE page_url='$pg' LIMIT 1")[0]['schema_markup'] ?? '';
-    }
-}
+// ---- Clean Canonical URL Engine (Auto for Every Page) ----
+$https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? '') == 443) || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+$scheme = $https ? 'https://' : 'http://';
+$host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$site_root = $scheme . $host . '/';
 
 if (!isset($canonical_url)) {
-    $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || ($_SERVER['SERVER_PORT'] ?? '') == 443;
-    $qs = '';
-    foreach (['slug', 'slug_url', 'cat'] as $k) if (!empty($_GET[$k])) { $qs = '?' . $k . '=' . urlencode(trim($_GET[$k])); break; }
-    $canonical_url = ($https ? 'https://' : 'http://') . ($_SERVER['HTTP_HOST'] ?? 'localhost') . parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) . $qs;
+    $req_path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    $req_path = preg_replace('#/index\.php$#i', '/', $req_path);$qs = '';
+    foreach (['slug', 'slug_url', 'cat', 'category'] as $k) {
+        if (!empty($_GET[$k])) {
+            $qs = '?' .$k . '=' . urlencode(trim($_GET[$k]));
+            break;
+        }
+    }
+    $canonical_url = $scheme .$host . $req_path .$qs;
 }
+
+// ---- Auto Meta & Schema Engine (Priority: 1. DB meta/page_schemas -> 2. Page Fallback -> 3. Global Default) ----
+$current_page_name = basename($_SERVER['PHP_SELF']);
+$db_meta = [];$db_schema = '';
+
+if ($ok) {
+    $pg =$conn->real_escape_string($current_page_name);$db_meta   = q("SELECT meta_title, meta_desc, meta_key FROM meta WHERE page_url='$pg' LIMIT 1")[0] ?? [];
+    $db_schema = q("SELECT schema_markup FROM page_schemas WHERE page_url='$pg' LIMIT 1")[0]['schema_markup'] ?? '';
+}
+
+$default_title = 'AMSB GLOBAL | Bulk Red Chilli Powder & Turmeric Powder Wholesale Supplier in Morbi, Gujarat';
+$default_desc  = 'AMSB GLOBAL (Wankaner, Morbi, Gujarat) is a trusted B2B wholesale supplier and trader of pure Red Chilli Powder and Turmeric Powder across India.';$default_key   = 'Red Chilli Powder Wholesale Gujarat, Turmeric Powder Bulk Supplier Morbi, AMSB Global Wankaner, Indian Spices B2B Trade';
+
+$meta_title = !empty($meta_title) ? $meta_title : (($db_meta['meta_title'] ?? '') ?: ($page_meta_title ?? $default_title));
+$meta_desc  = !empty($meta_desc)  ? $meta_desc  : (($db_meta['meta_desc'] ?? '')  ?: ($page_meta_desc ?? $default_desc));
+$meta_key   = !empty($meta_key)   ? $meta_key   : (($db_meta['meta_key'] ?? '')   ?: ($page_meta_key ?? $default_key));
+
+// Global Organization JSON-LD fallback if neither DB nor page provides schema
+$default_org_schema = '<script type="application/ld+json">' . json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'WholesaleStore',
+    'name' => $brand['name'],
+    'url' => $site_root,
+    'telephone' => '+' . $tel,
+    'email' => $mail,
+    'founder' => ['@type' => 'Person', 'name' => $brand['founder']],
+    'address' => [
+        '@type' => 'PostalAddress',
+        'streetAddress' => 'Wankaner',
+        'addressLocality' => 'Morbi',
+        'addressRegion' => 'Gujarat',
+        'postalCode' => '363621',
+        'addressCountry' => 'IN'
+    ]
+], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . '</script>';
+
+$schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_org_schema));
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 
 <head>
     <meta charset="UTF-8">
@@ -111,16 +144,28 @@ if (!isset($canonical_url)) {
     <title><?= e($meta_title) ?></title>
     <meta name="description" content="<?= e($meta_desc) ?>">
     <meta name="keywords" content="<?= e($meta_key) ?>">
+    <meta name="robots" content="index, follow">
     <link rel="canonical" href="<?= e($canonical_url) ?>">
-    <?php if (!empty($schema)) echo $schema; ?>
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_IN">
+    <meta property="og:site_name" content="<?= e($brand['name']) ?>">
+    <meta property="og:title" content="<?= e($meta_title) ?>">
+    <meta property="og:description" content="<?= e($meta_desc) ?>">
+    <meta property="og:url" content="<?= e($canonical_url) ?>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= e($meta_title) ?>">
+    <meta name="twitter:description" content="<?= e($meta_desc) ?>">
+    <?php if (!empty($schema)) echo "\n    " . $schema . "\n"; ?>
     <link rel="icon" href="assets/img/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= e(asset('assets/style/style.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset('assets/style/about.css')) ?>">
+    <?php foreach (($extra_css ?? []) as $css): ?>
+    <link rel="stylesheet" href="<?= e(asset($css)) ?>">
+    <?php endforeach; ?>
 </head>
 
 <body>
@@ -129,10 +174,9 @@ if (!isset($canonical_url)) {
     <div class="topbar">
         <div class="wrap">
             <div class="tl">
-                <span class="tb-badge"><i class="fa-solid fa-certificate"></i> B2B Spice Exporter</span>
+                <span class="tb-badge"><i class="fa-solid fa-handshake"></i> B2B Spice Trade</span>
                 <a href="mailto:<?= e($mail) ?>"><i class="fa-regular fa-envelope"></i> <?= e($mail) ?></a>
-                <a href="tel:+<?= e($tel) ?>"><i class="fa-solid fa-phone"></i> <?= e($disp_phone) ?>
-                    (<?= e($brand['founder']) ?>)</a>
+                <a href="tel:+<?= e($tel) ?>"><i class="fa-solid fa-phone"></i> <?= e($disp_phone) ?> (<?= e($brand['founder']) ?>)</a>
             </div>
             <div class="tr-info">
                 <span><i class="fa-solid fa-location-dot"></i> <?= e($brand['address']) ?></span>
@@ -143,10 +187,7 @@ if (!isset($canonical_url)) {
     <header class="site-header" id="top">
         <div class="wrap nav-wrap">
             <a class="brand" href="./">
-                <!-- Agar logo upload kiya hai to wo dikhega, warna default icon -->
                 <?= $logo ? '<img src="' . e($logo) . '" alt="' . e($brand['name']) . '">' : mark(42) ?>
-
-                <!-- Agar logo upload NAHI kiya hai, tabhi ye text dikhega -->
                 <?php if (!$logo): ?>
                 <span>
                     <b><?= e($brand['name']) ?></b>
@@ -157,26 +198,26 @@ if (!isset($canonical_url)) {
             <button class="tg" aria-label="Menu" aria-expanded="false" aria-controls="nav"><i></i></button>
             <nav id="nav">
                 <ul>
-                    <li><a href="./">Home</a></li>
-                    <li><a href="about.php">Company</a></li>
+                    <li><a href="./" class="<?= $current_page_name === 'index.php' ? 'active' : '' ?>">Home</a></li>
+                    <li><a href="about.php" class="<?= $current_page_name === 'about.php' ? 'active' : '' ?>">About Us</a></li>
                     <li class="has-dropdown">
-                        <a href="products.php">Our Spices <i class="fa-solid fa-chevron-down dd-icon"></i></a>
+                        <a href="products.php" class="<?= in_array($current_page_name, ['products.php', 'category.php', 'product-details.php']) ? 'active' : '' ?>">Our Spices <i class="fa-solid fa-chevron-down dd-icon"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="products.php" class="all">View Complete Catalogue</a></li>
-                            <?php foreach ($nav_cats as $slug => $cd): ?>
+                            <?php foreach ($nav_cats as $slug =>$cd): ?>
                             <li class="<?= $cd['subs'] ? 'has-sub-dropdown' : '' ?>">
                                 <a href="category.php?slug=<?= e($slug) ?>"><?= e($cd['name']) ?></a>
                             </li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
-                    <li><a href="#lab-specs">Lab Specs</a></li>
-                    <li><a href="service.php">B2B Services</a></li>
+                    <!-- <li><a href="service.php" class="<?= $current_page_name === 'service.php' ? 'active' : '' ?>">B2B Services</a></li> -->
+                    <li><a href="blog.php" class="<?= in_array($current_page_name, ['blog.php', 'blog-details.php']) ? 'active' : '' ?>">Blogs</a></li>
+                    <li><a href="contact.php" class="<?= $current_page_name === 'contact.php' ? 'active' : '' ?>">Contact</a></li>
                 </ul>
                 <div class="nav-actions">
-                    <a href="https://wa.me/<?= e($wa) ?>" target="_blank" rel="noopener" class="btn wa-btn"><i
-                            class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-                    <a href="#rfq" class="btn">Bulk Quote</a>
+                    <a href="https://wa.me/<?= e($wa) ?>?text=<?= rawurlencode($brand['wa_msg']) ?>" target="_blank" rel="noopener" class="btn wa-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+                    <a href="contact.php" class="btn">Bulk Quote</a>
                 </div>
             </nav>
         </div>
