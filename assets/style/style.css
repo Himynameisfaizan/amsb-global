@@ -222,7 +222,7 @@ background: #081225; /* Very Deep Navy Blue */
 .hero h1 { font-family: var(--font-head); font-size: clamp(2.2rem, 4vw, 3.35rem); font-weight: 800; line-height: 1.12; margin-bottom: 18px; }
 .txt-primary { color: var(--primary); }
 .txt-secondary { color: var(--secondary); }
-.hero .lead { color: #CBD5E1; font-size: 1.05rem; max-width: 580px; margin-bottom: 30px; }
+.hero .lead { color: #000; font-size: 1.05rem; max-width: 580px; margin-bottom: 30px; }
 .hero .cta { display: flex; flex-wrap: wrap; gap: 12px; }
 .hero .cta .btn.o {
     background: transparent;

@@ -7,14 +7,14 @@ ini_set('display_errors', 1);
 
 
 // Database Configuration
-$local = false; 
+$local = true; 
 
 if ($local) {
     $host = 'localhost';
     $username = 'root';
     $password = '';
     $dbName = 'amsb_global';
-    $site = "http://localhost/projects/amsb-global/";
+    $site = "http://localhost/office_php_project/amsb-global/";
 } else {
     $host = 'localhost';
     $username = 'u799879276_amsb_global';
