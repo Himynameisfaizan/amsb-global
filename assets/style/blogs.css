@@ -1,0 +1,267 @@
+/* ==========================================================================
+   PRODUCTS GRADE TABLE & BLOG PAGE STYLES — AMSB GLOBAL
+   ========================================================================== */
+
+/* --- Products Page: Wholesale Grade Comparison Table --- */
+.grade-table-wrap {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+}
+.grade-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+.grade-table thead {
+    background: #081225;
+    color: #fff;
+}
+.grade-table th {
+    font-family: var(--font-head);
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-align: left;
+    padding: 16px 20px;
+    color: var(--primary);
+    border-bottom: 3px solid var(--secondary);
+}
+.grade-table td {
+    padding: 15px 20px;
+    font-size: 0.9rem;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+}
+.grade-table tbody tr:nth-child(even) { background: #F8FAFC; }
+.grade-table tbody tr:last-child td { border-bottom: none; }
+.grade-table tbody tr:hover { background: #F0FAFC; }
+
+/* --- Blog Page: Hero Search Bar --- */
+.blog-hero-search {
+    position: relative;
+    max-width: 520px;
+}
+.blog-hero-search i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--secondary-dark);
+    font-size: 1rem;
+}
+.blog-hero-search input {
+    width: 100%;
+    padding: 14px 18px 14px 44px;
+    border-radius: 12px;
+    border: 2px solid rgba(43, 179, 214, 0.35);
+    background: #fff;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: #081225;
+    box-shadow: 0 10px 26px rgba(8, 18, 37, 0.06);
+}
+.blog-hero-search input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* --- Blog Page: Featured Latest Article --- */
+.feat-blog {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-top: 5px solid var(--primary);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 46px rgba(8, 18, 37, 0.08);
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.feat-blog:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 54px rgba(8, 18, 37, 0.12);
+}
+.fb-img {
+    position: relative;
+    min-height: 360px;
+    overflow: hidden;
+    background: #e2e8f0;
+}
+.fb-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.55s ease;
+}
+.feat-blog:hover .fb-img img { transform: scale(1.05); }
+.fb-badge {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    background: #081225;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+.fb-body {
+    padding: 36px 38px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.fb-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 14px;
+}
+.fb-topic {
+    background: #F0FAFC;
+    color: var(--secondary-dark);
+    border: 1px solid rgba(43, 179, 214, 0.3);
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-weight: 700;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+}
+.fb-body h2 {
+    font-family: var(--font-head);
+    font-size: clamp(1.5rem, 2.5vw, 2.05rem);
+    color: #081225;
+    line-height: 1.22;
+    margin-bottom: 14px;
+}
+.fb-body h2 a:hover { color: var(--primary-dark); }
+.fb-body p {
+    color: var(--muted);
+    font-size: 0.96rem;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+.fb-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--border);
+}
+.fb-author {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #334155;
+}
+.fb-author i { color: var(--primary); margin-right: 5px; }
+
+/* --- Blog Page: 3-Column Articles Grid --- */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+.bl-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+}
+.bl-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--secondary);
+    box-shadow: 0 20px 40px rgba(8, 18, 37, 0.1);
+}
+.blc-img {
+    height: 210px;
+    position: relative;
+    overflow: hidden;
+    background: #e2e8f0;
+}
+.blc-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+}
+.bl-card:hover .blc-img img { transform: scale(1.06); }
+.blc-topic {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(8, 18, 37, 0.88);
+    color: #FDE68A;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+.blc-body {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.blc-meta {
+    display: flex;
+    gap: 14px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+}
+.blc-meta i { color: var(--primary); margin-right: 4px; }
+.blc-body h3 {
+    font-family: var(--font-head);
+    font-size: 1.15rem;
+    color: #081225;
+    line-height: 1.32;
+    margin-bottom: 10px;
+}
+.blc-body h3 a:hover { color: var(--primary-dark); }
+.blc-body p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 18px;
+    flex: 1;
+}
+.blc-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border);
+}
+.blc-foot small { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+.blc-foot .rd {
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--secondary-dark);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.blc-foot .rd:hover { color: var(--primary-dark); }
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+    .feat-blog { grid-template-columns: 1fr; }
+    .fb-img { min-height: 260px; }
+    .blog-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+    .blog-grid { grid-template-columns: 1fr; }
+    .fb-body { padding: 24px 20px; }
+}

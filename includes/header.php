@@ -164,6 +164,8 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_o
     <link rel="stylesheet" href="<?= e(asset('assets/style/style.css')) ?>">
     <link rel="stylesheet" href="<?= e(asset('assets/style/about.css')) ?>">
     <link rel="stylesheet" href="<?= e(asset('assets/style/product.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset('assets/style/blogs.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset('assets/style/contact.css')) ?>">
     <?php foreach (($extra_css ?? []) as $css): ?>
     <link rel="stylesheet" href="<?= e(asset($css)) ?>">
     <?php endforeach; ?>
@@ -213,7 +215,7 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($page_schema ?? $default_o
                         </ul>
                     </li>
                     <!-- <li><a href="service.php" class="<?= $current_page_name === 'service.php' ? 'active' : '' ?>">B2B Services</a></li> -->
-                    <li><a href="blog.php" class="<?= in_array($current_page_name, ['blog.php', 'blog-details.php']) ? 'active' : '' ?>">Blogs</a></li>
+                    <li><a href="blogs.php" class="<?= in_array($current_page_name, ['blogs.php', 'blog-details.php']) ? 'active' : '' ?>">Blogs</a></li>
                     <li><a href="contact.php" class="<?= $current_page_name === 'contact.php' ? 'active' : '' ?>">Contact</a></li>
                 </ul>
                 <div class="nav-actions">
