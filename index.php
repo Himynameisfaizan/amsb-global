@@ -28,7 +28,7 @@ $about_i = img($A[0]['image_url'] ?? '', 'about_us', un('photo-1596040033229-a98
 
 // ---- Categories: Dynamic DB first + Spice Core Aisles ----
 $FC = [
-    ['Red Chilli Powder', 'red-chilli-powder', 'Teja S17, Sannam S4, Byadgi & Kashmiri grades ground to custom mesh.', 'photo-1588252303782-cb80119abd6d'],
+    ['Red Chilli Powder', 'red-chilli-powder', 'Teja S17, Regular & Kashmiri grades ground to custom mesh.', 'photo-1588252303782-cb80119abd6d'],
     ['Turmeric Powder',   'turmeric-powder',   'High-curcumin Salem, Erode & Rajapuri haldi powder for bulk trade.', 'photo-1615485500704-8e990f9900f7'],
     ['Ground Spices',     'ground-spices',     'Hygienically milled pure spices with natural aroma & zero added colour.', 'photo-1596040033229-a9821ebd058d'],
     ['Whole Indian Spices','whole-spices',     'Export-cleaned whole chillies, turmeric fingers & seed spices in 25/50 kg bags.', 'photo-1532336414038-cf19250c5757'],
@@ -209,7 +209,7 @@ $Bl = q("SELECT title, slug, author, image, meta_desc, description, created_at F
                         <i class="fa-solid fa-fire-flame-simple spec-ico"></i>
                     </div>
                     <div class="spec-table">
-                        <div class="st-row"><span>Varieties Processed</span><strong>Teja (S17), Sannam (S4), Byadgi,
+                        <div class="st-row"><span>Varieties Processed</span><strong>Teja (S17), Regular,
                                 Kashmiri</strong></div>
                         <div class="st-row"><span>Colour Value (ASTA)</span><strong>60 ASTA to 160+ ASTA (As per buyer
                                 spec)</strong></div>
