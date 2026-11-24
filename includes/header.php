@@ -87,11 +87,48 @@ if (!function_exists('img')) {
         $f = trim((string)$f);
         if ($f === '') return $fb;
         if (preg_match('#^https?://#', $f)) return $f;
+
         $c = ltrim($f, '/');
         $b = basename($c);
         $root = dirname(__DIR__) . '/';
-        foreach ([$c, "admin/$c", "uploads/$d/$b", "admin/uploads/$d/$b", "assets/img/uploads/$d/$b", "assets/images/$b", "admin/assets/img/uploads/$d/$b", "admin/assets/img/uploads/$b"] as $p) {
-            if (is_file($root . $p)) return $base_path . $p;
+
+        // Singular aur plural dono folder names auto-check honge
+        $dirs = [$d];
+        $pair = [
+            'categories' => 'category',
+            'category'   => 'categories',
+            'products'   => 'product',
+            'product'    => 'products',
+            'blogs'      => 'blog',
+            'blog'       => 'blogs',
+            'banners'    => 'banner',
+            'banner'     => 'banners',
+        ];
+        if (isset($pair[$d])) {
+            $dirs[] = $pair[$d];
+        }
+
+        $paths = [
+            $c,
+            "admin/$c",
+            "uploads/$b",
+            "admin/uploads/$b",
+            "assets/images/$b",
+            "admin/assets/img/uploads/$b",
+        ];
+
+        foreach ($dirs as $dir) {
+            $paths[] = "uploads/$dir/$b";
+            $paths[] = "admin/uploads/$dir/$b";
+            $paths[] = "assets/img/uploads/$dir/$b";
+            $paths[] = "admin/assets/img/uploads/$dir/$b";
+            $paths[] = "admin/assets/uploads/$dir/$b";
+        }
+
+        foreach (array_unique($paths) as $p) {
+            if (is_file($root . $p)) {
+                return $base_path . $p;
+            }
         }
         return $fb;
     }
