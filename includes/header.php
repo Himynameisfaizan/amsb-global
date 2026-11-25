@@ -255,6 +255,7 @@ $schema = !empty($schema) ? $schema : ($db_schema ?: ($fb_schema ?: $default_org
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= e(asset('assets/style/style.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset('assets/style/style.css')) ?>">
     <link rel="stylesheet" href="<?= e(asset('assets/style/about.css')) ?>">
     <link rel="stylesheet" href="<?= e(asset('assets/style/product.css')) ?>">
     <link rel="stylesheet" href="<?= e(asset('assets/style/blogs.css')) ?>">
